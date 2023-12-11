@@ -1,0 +1,369 @@
+<%- include('partials/Adminheader') %>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.js"></script>
+
+<style>
+    output{
+        width: 100%;
+        min-height: 100px;
+        display: flex;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        gap: 15px;
+        position: relative;
+        border-radius: 5px;
+        
+      }
+      .output{
+        width: 100%;
+        min-height: 100px;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        gap: 15px;
+        position: relative;
+        border-radius: 5px;
+        
+      }
+      output .image{
+        height: 100px;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+        position: relative;
+      }
+      .output .image{
+        height: 100px;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+        position: relative;
+      }
+      
+      output .image img{
+        height: 100%;
+        width: 100%;
+      }
+      .output .image img{
+        height: 100%;
+        width: 100%;
+      }
+      
+      output .image span{
+        position: absolute;
+        top: -4px;
+        right: 4px;
+        cursor: pointer;
+        font-size: 22px;
+        color: white;
+      }
+      .output .image span{
+        position: absolute;
+        top: -4px;
+        right: 4px;
+        cursor: pointer;
+        font-size: 22px;
+        color: white;
+      }
+      
+      output .image span:hover{
+        opacity: 0.8;
+      }
+      .output .image span:hover{
+        opacity: 0.8;
+      }
+      
+      output .span--hidden{
+        visibility: hidden;
+      }
+      .output .span--hidden{
+        visibility: hidden;
+      }
+</style>
+
+
+
+
+
+
+<div class="page-wrapper">
+<%- include('partials/Adminnav',{dashboard:false}) %>
+
+
+    <div class="main-container">
+        <%- include('partials/adminPageHeader',{dashboard:false,searchFormAction:'/admin/product-management'}) %>
+       
+
+                <div class="d-flex ms-4 me-4 justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h3 class="h3 text-primary">Product Management</h3>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        
+                            <!-- Dropdown to select a category for sorting -->
+                            <!-- <select id="categoryFilter" class="form-select"> -->
+                                <!-- <select class="form-control form-select" id="productCategory" name="category" required>
+                                    <option value="">Select a category</option>
+                                  </select> -->
+
+                                  <div class="btn-group me-2">
+                                  <form action="product-management" method="GET">
+                                    
+                                        <select class="form-control" name="category">
+                                            <option value="">All Categories <i class="fa-solid fa-caret-down" style="color: #000000;"></i></option>
+                                            <% categories.forEach(categorye => { %>
+                                                <option value="<%= categorye._id %>" <%= categorye._id.toString() === selectedCategory ? 'selected' : '' %>>
+                                                    <%= categorye.name %>
+                                                </option>
+                                            <% }) %>
+                                        </select>
+                                    
+                                </div>
+                                <div class="btn-group me-2">
+                                    <button type="submit" class="btn  btn-sm  btn-outline-primary mb-2">Filter</button>
+                                </form>
+                            </div>
+                                
+                        
+
+                        <div class="btn-group mb-2 me-2">
+                            <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal"
+                                data-bs-target="#createProductModal">
+                                + Add Product
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-wrapper">
+                    
+                    <!-- Content wrapper start -->
+                    <div class="content-wrapper">
+
+                      <% if (sucessmessage) { %>
+                        
+                        <span id="successMessage" class="alert alert-success">
+                            <%= sucessmessage %>
+                        </span>
+                    <% } %>
+            <!-- PAGINATION -->
+                <nav aria-label="..." class="d-flex justify-content-end">
+                  <ul class="pagination ml-auto " id="pagination">
+                      <% if(currentPage>1){ %>
+                    <li class="page-item" id="previousPage">
+                     <a href ="/admin/product-management?page=<%= currentPage-1 %>"> <span class="page-link" >Previous</span></a>
+                    </li>
+                    <% } %>
+                    <% for (let i = 1; i <= totalPages; i++) { %>
+                      <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                        <a class="page-link" href="/admin/product-management?page=<%= i %>"><%= i %></a>
+                      </li>
+                    <% } %>
+                    <!-- Pagination links will be added dynamically here -->
+                  <% if(currentPage<totalPages){  %>
+                    <li class="page-item" id="nextPage">
+                      <a class="page-link" href="/admin/product-management?page=<%= currentPage+1 %>">Next</a>
+                    </li>
+                    <% } %>
+                  </ul>
+                </nav> 
+                   
+              <!-- PAGINATION Ends-->
+
+
+                <div class="container mt-2">
+                    <%  products.forEach((item)=>{    %> 
+                    <div class="d-flex justify-content-center row mt-2">
+                        <div class="col-md-10">
+                            <div class="row p-2 bg-white border rounded">
+                                <div class="col-md-3 mt-1">
+
+                                    <img class="img-fluid img-responsive rounded product-image"
+                                    src="/<%= item.image %>" 
+                                    alt="<%= item.name %> Image">
+                                    <!-- "data:image/webp;base64 -->
+                                    </div>
+                                <div class="col-md-6 mt-1">
+                                    <h5><%= item.name %></h5>
+                                    <div class="d-flex flex-row">
+
+                                        <div class="ratings mr-2 me-1">
+                                            <% for (let i = 1; i <= 5; i++) { %>
+                                                <% if(i<=item.rating){ %>
+                                                    <i class="fa fa-star" style="color: yellow;"></i>
+                                                    <% }else{ %>
+                                                        <i class="fa fa-star" style="color: black; border-color: black;"></i>
+                                                        <% } } %>
+                                                    </div> <span>  <%= item.rating  %></span>
+                                            </div>
+
+                                    <div class="mt-1 mb-1 spec-1"><span><%= item.brand %></span><span
+                                            class="dot"></span>
+                                            <% if(item.countInStock > 0){ %> 
+                                            <span>|| Stocks : <%= item.countInStock%></span>
+                                           <% }else{ %> 
+                                            <span class="badge badge-danger text-danger">|| Stocks : OUT OF STOCK</span>
+                                            <% } %>
+                                            <span class="dot"></span> <span class="badge <%= item.isFeatured ? 'bg-success' : 'bg-danger' %>">
+                                                <%= item.isFeatured ? 'Published' : 'Not Published' %>
+                                            </span>
+                                            </div>
+                                    <div class="mt-1 mb-1 spec-1"><span><<%= item.description %></span></div>
+                                    <p class="text-justify text-truncate para mb-0">Category : <% if(!item.category) {%> <span><span class="alert alert-info" role="alert">Category is Removed</span></span>
+                                        <% }else{ %>
+                                         <%=  item.category.name %>
+                                         <% if (item.category.status==='unlisted') { %>
+                                            <span class="alert alert-danger" role="alert">Category is Unlisted</span>
+                                          <% } %>
+                                         <% } %>
+                                       </p><br><br>
+                                    <p class ="text-justify text-truncate para mb-0">Description :<%= item.description %></p>
+                                </div>
+
+                                <div class="align-items-center align-content-center col-md-3 border-left mt-1">
+                                    <div class="d-flex flex-row align-items-center">
+
+                                        <h4 class="mr-1">INR <%= item.price %></h4>
+
+                                    </div>
+                                    <button data-product-id="<%= item._id %>"
+                                                    data-is-featured="<%= item.isFeatured %>" class="btn btn-sm publish-button
+                                                    <%= item.isFeatured ? 'btn-success' : 'btn-dark' %>" 
+                                                    <% if(!item.category){ %>
+                                                        disabled
+                                                        <% }else{ %>
+                                                      <% if (item.category.status==='unlisted') { %>
+                                                        disabled
+                                                      <% }} %> >
+                                                <%= item.isFeatured ? 'Unpublish' : 'Publish' %>
+                                            </button>
+
+                                    <div class="d-flex flex-column mt-4">
+                                      <a class="btn btn-warning btn-sm"  href="/admin/product-management/editProduct/<%= item._id %>"
+                                        type="button" >Edit product</a>  
+                                        </div>
+                                              </div>
+                                            </div>
+                                            </div>
+                                        </div>
+                                        <% }) %>
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+         </div>
+       
+
+                                                          
+
+
+
+
+          <!-- ADD PRODUCT MODAL   -->
+       
+            <div class="modal fade" id="createProductModal" tabindex="-1" role="dialog" aria-labelledby="createProductModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="createProductModalLabel">Add New Product</h5>
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Form for adding a new product -->
+                            <form method="POST" id="addNewProduct" action="/admin/product-management/newProduct" enctype="multipart/form-data" onsubmit="return ValidateProduct()">
+                                <div class="form-group mb-3">
+                                  <label for="productName">Product Name</label>
+                                  <input type="text" class="form-control" id="productName" name="name" required>
+                                  <span id="addproductname" class="text-danger validation-error"></span>
+                                </div>
+                                <div class="form-group mb-3">
+                                  <label for="productDescription">Description</label>
+                                  <textarea class="form-control" id="productDescription" name="description" required></textarea>
+                                  <span id="addproductdescription" class="text-danger validation-error"></span>
+                                </div>
+                                <!-- Main image -->
+                                <div class="form-group mb-3">
+                                  <label for="image">Main Image (Upload one file)</label>
+                                  <input type="file" class="form-control-file" id="image" name="image" accept="image/*" required>
+                                  <span id="addproductimage" class="text-danger validation-error"></span>
+                                  <button type="button" onclick="loadImage('image')">Crop</button>
+                                  <div class="output" style="display: none;"></div>
+                                </div>
+
+                                <!-- <div id="imageCropper" style="display: none; height: 200px"> -->
+                                  <img src="" id="showimage"style="max-width: 100%; max-height: 500px;" alt="">
+                                <!-- </div> -->
+                                <button style="display: none;" type="button" id="saveimage" onclick="uploadCroppedImage('image')">Save</button>
+
+                                <button style="display: none;" type="button" id="cancelimage" >Cancel</button>
+
+
+                                <!-- Additional images (upload multiple files) -->
+                                <div class="form-group mb-3">
+                                  <label for="images">Additional Images (Upload multiple files)</label>
+                                  <input type="file" class="form-control-file" id="images" name="images" accept="image/*" multiple>
+                                  <span id="addproductimages" class="text-danger validation-error"></span>
+                                  <output style="display: none;"></output>
+                                </div>
+                                <div class="form-group mb-3">
+                                  <label for="productBrand">Brand</label>
+                                  <input type="text" class="form-control" id="productBrand" name="brand">
+                                  <span id="addproductbrand" class="text-danger validation-error"></span>
+                                </div>
+                                <div class="form-group mb-3">
+                                  <label for="productCountInStock">Count in Stock</label>
+                                  <input type="number" class="form-control" id="productCountInStock" name="countInStock" required>
+                                  <span id="addproductcount" class="text-danger validation-error"></span>
+                                </div>
+                                <div class="form-group d-flex mb-3">
+                                  <label>Sizes:</label><br>
+                                  <input type="checkbox" id="small" name="sizes" value="S">
+                                  <label for="small">Small</label><br>
+                                  <input type="checkbox" id="medium" name="sizes" value="M">
+                                  <label for="medium">Medium</label><br>
+                                  <input type="checkbox" id="large" name="sizes" value="L">
+                                  <label for="large">Large</label><br>
+                                  <input type="checkbox" id="xlarge" name="sizes" value="XL">
+                                  <label for="xlarge">Extra Large</label>
+                                  </div>
+                                <div class="form-group mb-3">
+                                  <label for="productCategory">Category</label>
+                                  <select class="form-control" id="productCategoryAdd" name="category" required>
+                                    <option value="">Select a category</option>
+                                  </select>
+                                  <span id="addproductcategory" class="text-danger validation-error"></span>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="productsubCategory">Sub Category</label> 
+                                    <div id="subCategoryOptions" class="d-flex mt-3 gap-2" name="subcategoryies[]">
+                                        <!-- Subcategory options will be added dynamically here -->
+                                      </div>
+                                </div>
+                                <div class="form-group mb-3">
+                                  <label for="productPrice">Price</label>
+                                  <input type="number" class="form-control" id="productPrice" name="price" required>
+                                  <span id="addproductprice" class="text-danger validation-error"></span>
+                                </div>
+                                <button type="submit"  class="btn btn-primary">Add Product</button>
+                              </form>
+                              
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+             <!-- ADD PRODUCT MODAL ENDS  -->
+            
+            
+    
+              
+<script src="/javascripts/ADMIN/AdminProductManagementHome.js"></script>
+
+
+<%- include('partials/Adminfooter') %>

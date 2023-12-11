@@ -1,0 +1,142 @@
+<%- include('partials/Adminheader') %>
+		<div class="page-wrapper">
+      <%- include('partials/Adminnav',{dashboard:false}) %>
+			<div class="main-container">
+
+				<!-- Page header starts -->
+        <%- include('partials/adminPageHeader',{dashboard:false,searchFormAction:'#'}) %>
+				<!-- Page header ends -->
+                <div class="d-flex ms-4 me-4 justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h3 class="h3 text-primary">Order Management</h3>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                      
+                        
+                    </div>
+                </div>
+                
+				<!-- Content wrapper scroll start -->
+				<div class="content-wrapper-scroll">
+
+					<!-- Content wrapper start -->
+					<div class="content-wrapper">
+                        <nav aria-label="..." class="d-flex justify-content-end">
+                            <ul class="pagination ml-auto " id="pagination">
+                                <% if(page>1){ %>
+                              <li class="page-item" id="previousPage">
+                               <a href ="/admin/users?order-management=<%= currentPage-1 %>"> <span class="page-link" >Previous</span></a>
+                              </li>
+                              <% } %>
+                              <% for (let i = 1; i <= totalPages; i++) { %>
+                                <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                                  <a class="page-link" href="/admin/order-management?page=<%= i %>"><%= i %></a>
+                                </li>
+                              <% } %>
+                              <!-- Pagination links will be added dynamically here -->
+                            <% if(page<totalPages){  %>
+                              <li class="page-item" id="nextPage">
+                                <a class="page-link" href="/admin/order-management?page=<%= currentPage+1 %>">Next</a>
+                              </li>
+                              <% } %>
+                            </ul>
+                          </nav> 
+                        <div class="row">
+							<div class="col-sm-12 col-12">
+
+								<div class="card">
+									<div class="card-body">
+										<div class="table-responsive">
+											<table class="table m-0">
+												<thead>
+													<tr>
+														<th>S.No</th>
+														
+														<th>Status</th>
+														<th>Ordered BY</th>
+														<th>Purchased</th>
+														<th>Date</th>
+														<th>Price</th>
+														<th class="text-right">View</th>
+														<th class="text-right">Deleted</th>
+														
+													</tr>
+												</thead>
+												<tbody>
+                                                    <% if(orders && orders.length > 0){ %>
+                                                        <% orders.forEach((order, index) => { %>
+                                                            <tr>
+                                                                <td><%= index + 1  %></td>
+                                                                
+                                                                <%
+                                                                const statusColors = {
+                                                                    "Pending": "yellow",
+                                                                    "Processing": "grey",
+                                                                    "Shipped": "green",
+                                                                    "Delivered": "blue",
+                                                                    "Canceled": "red",
+                                                                    "Failed":"red",
+                                                                    "Returned":"green"
+                                                                };
+                                                                %>
+                                                                <td><span class="badge shade-<%= statusColors[order.status] %>"><%= order.status %></span></td>
+
+                                                                <td>
+                                                                  <%= order.user.firstName %>
+                                                                  <% if (order.requests && order.requests.length > 0) { %>
+                                                                    <% order.requests.forEach(request => { %>
+                                                                      <% if (request.type === 'Cancel' && request.status === 'Pending') { %>
+                                                                        <span class="badge shade-yellow">Cancel Request</span>
+                                                                      <% } else if (request.type === 'Return' && request.status === 'Pending') { %>
+                                                                        <span class="badge shade-red">Return Request</span>
+                                                                      <% } %>
+                                                                    <% }) %>
+                                                                  <% } %>
+                                                                </td>
+                                                                
+                                                                <td>
+                                                                    <% const totalQuantity = order.items.reduce((total, item) => total + item.quantity, 0); %>
+                                                                    <%= totalQuantity %> Items
+                                                                </td>
+                                                                <td><%= order.orderDate.toLocaleDateString() %></td>
+                                                                <td class="text-bold">INR <%= order.billTotal %></td>
+                                                                <td> <a href="/admin/order-management/orderDetailedView/<%= order._id %>"><button class=" btn-success " style="height: 30px; width:30px"> <i class="fa-regular fa-eye" style="color: #ffff;height: 8px;"></i></button></a></td>
+                                                                <td><button class="btn-danger" style="height: 30px;" onclick="confirmDelete('<%= order._id %>')">Delete</button></td>
+                                                              
+                                                            </tr>
+                                                        <% }) } else{ %>
+                                                   
+													<tr>
+														<td colspan="9" class="text-center">No orders Found</td>
+													</tr>
+                                                <% } %>
+													
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+
+							</div>
+						</div>
+
+                    </div>
+					<!-- Content wrapper end -->
+
+					<!-- App Footer start -->
+					<div class="app-footer">
+						<span>©</span>
+					</div>
+					<!-- App footer end -->
+
+				</div>
+				<!-- Content wrapper scroll end -->
+
+			</div>
+			<!-- *************
+				************ Main container end *************
+			************* -->
+
+		</div>
+
+       <script src="/javascripts/ADMIN/AdminOrderManagaement.js"></script>
+    <%- include('partials/Adminfooter') %>
+		

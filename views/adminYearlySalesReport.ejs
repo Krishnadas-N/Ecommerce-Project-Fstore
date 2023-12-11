@@ -1,0 +1,315 @@
+<%- include('partials/Adminheader') %>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
+
+body{
+    font-family: 'Open Sans', sans-serif;
+    
+}
+.search{
+  
+  top:6px;
+  left:10px;
+}
+
+.form-control{
+    
+    border:none;
+    padding-left:32px;
+}
+
+.form-control:focus{
+    
+    border:none;
+    box-shadow:none;
+}
+
+.green{
+    
+    color:green;
+}
+.modal.fade:not(.in) {
+  opacity: 1 !important;
+}
+
+</style>
+<!-- Add these stylesheet links to your head section -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.css" rel="stylesheet">
+
+<!-- Add these script links at the end of your body section, after jQuery and Bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+<!-- Bootstrap CSS and JavaScript -->
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<!-- Include Flatpickr CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+<!-- Include Flatpickr JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+
+		<!-- Page wrapper start -->
+		<div class="page-wrapper">
+
+			<!-- Sidebar wrapper start -->
+      <%- include('partials/Adminnav',{dashboard:true}) %>
+			<!-- Sidebar wrapper end -->
+
+			<!-- *************
+				************ Main container start *************
+			************* -->
+			<div class="main-container">
+
+				<!-- Page header starts -->
+        <%- include('partials/adminPageHeader',{dashboard:true,searchFormAction:'#'}) %>
+
+
+				<!-- Page header ends -->
+                <div class="d-flex ms-4 me-4 justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <div class="btn-toolbar mb-2 mb-md-0 d-flex justify-content-end">
+                     <!-- Button to trigger the modal -->
+                    <button id="showGraphButton" data-toggle="modal" data-target="#salesGraphModal">Show Graph</button>
+          
+                    </div>
+                  </div>
+
+                <div class="modal fade" id="salesGraphModal" tabindex="-1" role="dialog" aria-labelledby="salesGraphModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="salesGraphModalLabel">Weekly Sales Report Graph</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <canvas id="YearlyRevenueGraph" width="400" height="200"></canvas>
+                          <canvas id="yearlyCustomerGraph" width="400" height="200"></canvas>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+        
+				<!-- Content wrapper scroll start -->
+				<div class="content-wrapper-scroll">
+
+					<!-- Content wrapper start -->
+					<div class="content-wrapper">
+
+
+            <div class="row d-flex">
+              <form id="filterForm">
+                <label for="startYear">Start Year:</label>
+                <input type="text" id="startYear" name="startYear" data-input required>
+                <label for="endYear">End Year:</label>
+                <input type="text" id="endYear" name="endYear" data-input required>
+                <input type="radio" name="format" value="excel">Excel
+                <input type="radio" name="format" value="pdf">PDF
+                <button type="submit" >Download </button>
+               
+              </form>
+            </div>
+            
+            
+            
+            
+             
+              <div class="row">
+                <div class="col-lg-10 mx-auto">
+                  <div class="card rounded shadow border-0">
+                    <div class="card-body bg-white rounded">
+                      <div class="table-responsive">
+                        <table id="example" style="width:100%" class="table table-striped table-bordered">
+                          <thead>
+                            <tr>
+                              <th>year</th>
+                              <th>totalOrders</th>
+                              <th>totalRevenue</th>
+                              <th>mostSoldProducts</th>
+                              <th>totalCancelledOrders</th>
+                              <th>customersSignedIn</th>
+                              <th>totalProfit</th>
+                              
+                            
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <% yearlySalesDataArray.forEach(yearlySalesData => { %>
+                              <tr>
+                                <td><%= yearlySalesData.year %></td>
+                                <td><%= yearlySalesData.totalOrders %></td>
+                                <td> INR <%= yearlySalesData.totalRevenue %></td>
+                                <td>
+                                  <ul>
+                                    <%= yearlySalesData.mostSoldProducts %> 
+                                  </ul>
+                                </td>
+                                
+                                <td><%= yearlySalesData.totalCancelledOrders %></td>
+                                
+                                <td><%= yearlySalesData.customersSignedIn %></td>
+                                <td><%= yearlySalesData.totalProfit %></td>
+                                <!-- Add more table data cells for additional data -->
+                              </tr>
+                            <% }) %>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            
+                    
+
+					</div>
+                    </div>
+                    </div>
+                    </div>
+
+
+                <!-- Script to generate yearly sales graph -->
+<script>
+  const yearlySalesData = <%- JSON.stringify(yearlySalesDataArray) %>;
+
+  // JavaScript code to handle the button click and display the graph
+  document.getElementById('showGraphButton').addEventListener('click', function () {
+    const labels = yearlySalesData.map((year) => year.year);
+    const revenueData = yearlySalesData.map((year) => year.totalRevenue);
+    const customerData = yearlySalesData.map((year) => year.customersSignedIn);
+
+    // Create the yearly revenue graph using Chart.js
+    const revenueCtx = document.getElementById('YearlyRevenueGraph').getContext('2d');
+    new Chart(revenueCtx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Yearly Revenue',
+            data: revenueData,
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 2,
+          },
+        ],
+      },
+      options: {
+        scales: {
+          x: {
+            beginAtZero: true,
+          },
+          y: {
+            beginAtZero: true,
+          },
+        },
+      },
+    });
+
+    // Create the yearly customer graph using Chart.js
+    const customerCtx = document.getElementById('yearlyCustomerGraph').getContext('2d');
+    new Chart(customerCtx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Yearly New Customers',
+            data: customerData,
+            borderColor: 'rgba(255, 99, 132, 1)', // Customize the color as needed
+            borderWidth: 2,
+          },
+        ],
+      },
+      options: {
+        scales: {
+          x: {
+            beginAtZero: true,
+          },
+          y: {
+            beginAtZero: true,
+          },
+        },
+      },
+    });
+
+    // You can also remove any other CSS classes or styles that may be causing the blurring effect.
+  });
+
+
+
+  // Initialize Flatpickr for the startYear input
+flatpickr('#startYear', {
+  dateFormat: 'Y', // Year format
+  minDate: '2000-01-01', // Set a min date if needed
+  maxDate: '2030-12-31', // Set a max date if needed
+});
+
+// Initialize Flatpickr for the endYear input
+flatpickr('#endYear', {
+  dateFormat: 'Y', // Year format
+  minDate: '2000-01-01', // Set a min date if needed
+  maxDate: '2030-12-31', // Set a max date if needed
+});
+
+document.getElementById('filterForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const startYear = document.getElementById('startYear').value;
+  const endYear = document.getElementById('endYear').value;
+  const format = document.querySelector('input[name="format"]:checked').value;
+
+  try {
+    const response = await fetch(`/admin/generateYearlyReport?startYear=${startYear}&endYear=${endYear}&format=${format}`);
+
+    if (response.ok) {
+      const contentDisposition = response.headers.get('content-disposition');
+      const filename = contentDisposition.split('filename=')[1];
+      const blob = await response.blob();
+
+      if (format === 'excel' || format === 'pdf') {
+        // Create a temporary link element to trigger the download
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      } else {
+        console.log('Invalid format');
+      }
+    } else {
+      console.error('Error:', response.statusText);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
+});
+
+
+</script>
+
+                      
+                   
+                            
+                      
+
+   <%- include('partials/Adminfooter') %>
+		

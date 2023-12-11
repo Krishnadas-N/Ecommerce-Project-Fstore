@@ -1,0 +1,440 @@
+<%- include('partials/Adminheader') %>
+
+<style>
+  .toggle-button {
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  .toggle-button:hover {
+    background-color: #2980b9;
+  }
+  
+  #tooltip {
+    visibility: hidden;
+    width: 120px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+  .toggle-container:hover #tooltip {
+    visibility: visible;
+    opacity: 1;
+  }
+  .message-box {
+    position: fixed;
+    top: 4%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px;
+    display: none;
+}
+  .success {
+      background-color: #4CAF50;
+  }
+
+  .error {
+      background-color: #f44336;
+  }
+  table {
+  
+    margin: auto; /* Center the table horizontally */
+    text-align: center; /* Center the contents of the table cells */
+}
+table tr td{
+  padding-left: 10px;
+}
+  /* CSS for the icon */
+  .message-icon {
+      display: inline-block;
+      margin-right: 5px;
+  }
+</style>
+<div class="page-wrapper">
+<%- include('partials/Adminnav',{dashboard:false}) %>
+
+
+<div class="message-box" id="messageBox"></div>
+
+<div class="main-container">
+    <%- include('partials/adminPageHeader',{dashboard:false,searchFormAction:'#'}) %>
+    
+
+    <div class="d-flex ms-4 me-4 justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h3 class="h3 text-primary">Category Management</h3>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <div class="btn-group me-2">
+                <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#createCategoryModal">
+                    + create category
+                </button>
+            </div>
+            
+        </div>
+    </div>
+                                                 <!-- Modal for creating a category -->
+                                                    <div class="modal fade" id="createCategoryModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="exampleModalLabel">Create Category</h5>
+                                                                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <form method="POST" action="/admin/category-management/newCategory" id="creatCattegoryForm" enctype="multipart/form-data">
+                                                                        <div class="mb-3">
+                                                                            <label for="name" class="form-label">Category Name:</label>
+                                                                            <input type="text" id="name" name="name" class="form-control" required>
+                                                                        </div>
+                                                                        <div class="mb-3">
+                                                                            <label for="description" class="form-label">Category Description:</label>
+                                                                            <textarea id="description" name="description" class="form-control" required></textarea>
+                                                                        </div>
+                                                                        <div class="mb-3">
+                                                                          <label for="categoryOffer" class="form-label">Category Offer:</label>
+                                                                          <input type="number" min="0" max="100" id="categoryOffer" name="categoryOffer" class="form-control" required>
+                                                                      </div>
+
+                                                                        <div class="mb-3">
+                                                                            <label for="image" class="form-label">Category Image:</label>
+                                                                            <input type="file" id="image" name="image" accept="image/*" class="form-control" required>
+                                                                        </div>
+                                                                        <button type="submit" class="btn btn-primary">Create Category</button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+          
+    <!-- PAGINATION -->
+    <nav aria-label="..." class="d-flex justify-content-end">
+      <ul class="pagination ml-auto " id="pagination">
+          <% if(page>1){ %>
+        <li class="page-item" id="previousPage">
+         <a href ="/admin/category-management?page=<%= currentPage-1 %>"> <span class="page-link" >Previous</span></a>
+        </li>
+        <% } %>
+        <% for (let i = 1; i <= totalPages; i++) { %>
+          <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+            <a class="page-link" href="/admin/category-management?page=<%= i %>"><%= i %></a>
+          </li>
+        <% } %>
+        <!-- Pagination links will be added dynamically here -->
+      <% if(page<totalPages){  %>
+        <li class="page-item" id="nextPage">
+          <a class="page-link" href="/admin/category-management?page=<%= currentPage+1 %>">Next</a>
+        </li>
+        <% } %>
+      </ul>
+    </nav> 
+
+   <table class="table align-middle mb-0 mt-2 bg-white">
+       <thead class="bg-light text-center">
+            <tr>
+                <th>Image</th>
+                <th>Category Name</th>
+                <th>Description</th>
+                <th>Subcategories</th>
+                <th colspan="3">Actions</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <% categories.forEach((category, index) => { %>
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <% if (category.image) { %>
+                                <img
+                                    src="/<%= category.image %>" 
+                                    alt="<%= category.name %> Image"
+                                    style="width: 45px; height: 45px"
+                                    class="rounded-circle"
+                                />
+                            <% } %>
+                            
+                        </td>
+                     <td>
+                            <div class="ms-3">
+                                <p class="fw-bold mb-1"><%= category.name %></p>
+                            </div>
+                       
+                      </td>
+                    <td>
+                        <p class="fw-normal mb-1"><%= category.description %></p>
+                    </td>
+                    
+
+                    <td>
+                            <!-- Button to trigger the modal -->
+                           <button type="button" class="btn btn-info" data-bs-toggle="modal"
+                                data-bs-target="#subCategory<%= category._id %>"
+                                data-category-id="<%= category._id %>" onclick="getSubCategories('<%= category._id %>')" <% if (category.status !== 'active') { %>
+                                  disabled
+                              <% } %>> 
+                                Show Sub Categories
+                                </button>
+
+                          
+                            <!-- Modal for subcategories -->
+                            <div class="modal fade" id="subCategory<%= category._id %>" tabindex="-1" role="dialog" aria-labelledby="subCategoryModalLabel"
+                              aria-hidden="true" data-category-id="<%= category._id %>">
+                              <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                  <!-- Modal content, you can add your CRUD operations here -->
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="subCategoryModalLabel">Subcategories for <%= category.name %></h5>
+                                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                    </button>
+                                  </div>
+                                  <div class="modal-body">
+                                    <div class="modal-body">
+                                         <!-- Display subcategories here -->
+                                                 <!-- Display subcategories here -->
+                                            <ul id="subcategoryList" class="list-group list-group-numbered">
+                                                <!-- Subcategories will be listed here dynamically -->
+                                            </ul>
+                                      </div>
+                                  </div>
+                                  <!-- You can add CRUD operations buttons in the modal footer -->
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-success" id="addNewSubcategoryButton"  data-category-id="<%= category._id %>">Add Subcategory</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                                            <!-- Submodal for adding a subcategory -->
+                                                <div class="modal fade" id="addSubcategoryModal" tabindex="-1" role="dialog" aria-labelledby="addSubcategoryModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                                    <div class="modal-content">
+                                                        <!-- Modal content for adding subcategory -->
+                                                        <div class="modal-header">
+                                                        <h5 class="modal-title" id="addSubcategoryModalLabel">Add Subcategory</h5>
+                                                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                        <!-- Add Subcategory Form -->
+                                                        <form id="addSubcategoryForm">
+                                                            <div class="form-group">
+                                                            <label for="subcategoryName">Subcategory Name:</label>
+                                                            <input type="text" class="form-control" id="subcategoryName" name="subcategoryName" required>
+                                                            </div>
+                                                            <div class="form-group">
+                                                            <label for="subcategoryDescription">Subcategory Description:</label>
+                                                            <textarea class="form-control" id="subcategoryDescription" name="subcategoryDescription"></textarea>
+                                                            </div>
+                                                            <input type="hidden" name="categoryId" id="categoryId"> 
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-success" id="saveSubcategoryButton">Save Subcategory</button>
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                                </div>
+                                                        </form>
+                                                        </div>
+                                                     
+                                                    </div>
+                                                    </div>
+                                                </div>
+                                            
+                                                
+                                                                                    <!--FOR EDIT SUBCATEGORY FORM   -->
+                                                                                    <div class="modal fade" id="editSubcategoryModal" tabindex="-1" role="dialog" aria-labelledby="editSubcategoryModalLabel" aria-hidden="true">
+                                                                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                                                                          <div class="modal-content">
+                                                                                            <div class="modal-header">
+                                                                                              <h5 class="modal-title" id="editSubcategoryModalLabel">Edit Subcategory</h5>
+                                                                                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                                <span aria-hidden="true">&times;</span>
+                                                                                              </button>
+                                                                                            </div>
+                                                                                            <div class="modal-body">
+                                                                                              <form id="editSubcategoryForm">
+                                                                                                <div class="form-group">
+                                                                                                  <label for="editSubcategoryName">Name:</label>
+                                                                                                  <input type="text" class="form-control" id="editSubcategoryName" name="name">
+                                                                                                </div>
+                                                                                                <div class="form-group">
+                                                                                                    <label for="editSubcategoryDescription">Description</label>
+                                                                                                    <input type="text" class="form-control" id="editSubcategoryDescription" name="description">
+                                                                                                  </div>
+                                                                                                <!-- Add more input fields for other subcategory properties -->
+                                                                                              </form>
+                                                                                            </div>
+                                                                                            <div class="modal-footer">
+                                                                                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                                              <button type="button" class="btn btn-primary" id="saveChangesButton" >Save Changes</button>
+                                                                                            </div>
+                                                                                          </div>
+                                                                                        </div>
+                                                                                      </div>
+                                                                                      
+                            
+                          
+                    </td>
+                    
+                    <td>
+                      <button type="button" class="btn" style="height: 40px; display: flex;"
+                      onclick="toggleCategoryStatus('<%= category._id %>', '<%= category.status %>')"
+                      id="categoryButton-<%= category._id %>">
+                  <span id="categoryButtonText-<%= category._id %>">
+                      <% if (category.status === 'active') { %>
+                        <i class="fa-regular fa-eye" style="color: #000000;"></i>  Unlist
+                      <% } else { %>
+                        <i class="fa-solid fa-eye-slash" style="color: #000000;"></i> List
+                      <% } %>
+                  </span>
+              </button>
+              
+
+                      </td>
+                      <td>
+                        <button id="toggleButton" onclick="toggleOffer('<%= category._id %>')" type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Activate/Deactivate Offer">
+                          <i id="icon_<%= category._id %>" class="fas fa-toggle-on"></i>
+                        </button>
+                       </td>
+
+
+
+
+
+
+
+
+                    <td>
+                        <button type="button" class="btn btn-primary"  style="height: 40px; display: flex;" data-bs-toggle="modal"
+                        data-bs-target="#editModal<%= category._id %>"
+                        data-category-id="<%= category._id %>">
+                            <i class="fa fa-edit"></i> Edit
+                          </button>
+                          
+                                        <!-- Modal for editing category -->
+                                        <div class="modal fade" id="editModal<%= category._id %>" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="editModalLabel">Edit Category</h5>
+                                                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <!-- Edit category form -->
+                                                        <form method="POST" id="categoryEditForm" action="category-management/edit-category/<%= category._id %>">
+                                                            <div class="form-group mb-3">
+                                                                <label for="editName">Name:</label><br>
+                                                                <input type="text" class="form-control" id="editName" name="editName" value="<%= category.name %>" required>
+                                                            </div>
+                                                         
+                                                            <div class="form-group mb-3">
+                                                                <label for="editDescription">Description:</label>
+                                                                <br>
+                                                                <textarea class="form-control" id="editDescription" name="editDescription" required><%= category.description %></textarea>
+                                                            </div>
+
+                                                            <div class="mb-3">
+                                                              <label for="editcategoryOffer" class="form-label">Category Offer:</label>
+                                                              <input type="number" min="0" max="100" id="editcategoryOffer" name="categoryOffer" class="form-control" >
+                                                          </div>
+
+                                                           
+                                                            <div class="form-group mb-3">
+                                                                <label for="editImage">Category Image:</label>
+                                                                <br>
+                                                                <div class="border-2 mt-1 " style=" background:grey;position: relative;width: 49px; height: 48px ;" >
+                                                                    <img src="/<%= category.image %>" alt="<%= category.name %> Image" style="width: 45px; height: 45px ;position:relative; margin-top:2px ;margin-left:2px">
+                                                                  </div>
+                                                                  
+                                                                <br>
+                                                                <input type="file" class="form-control" id="editImage" name="editImage" accept="image/*">
+                                                            </div>
+                                                           
+
+                                                            <!-- Add additional fields as needed -->
+                                                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                    </td>
+
+
+
+
+
+
+
+                 </tr>  
+            <% }) %>
+        </tbody>
+    </table>
+                
+    
+
+
+
+</div>
+</div>
+<script src="/javascripts/ADMIN/AdminCategoryManagement.js"></script>
+
+<script>
+  
+const successMessage = '<%= sucessMessage %>';
+const errorMessage = '<%= errorMessage %>'; 
+
+console.log('////////////////////////////////////////////////////////////')
+const messageBox = document.getElementById('messageBox');
+function showMessage(message, messageType) {
+  messageBox.innerHTML = '';
+  const icon = document.createElement('span');
+  icon.className = 'message-icon';
+  
+  if (messageType === 'success') {
+      icon.innerHTML = '✔'; // You can use any icon you prefer
+  } else if (messageType === 'error') {
+      icon.innerHTML = '✖'; // You can use any icon you prefer
+  }
+
+  messageBox.appendChild(icon);
+  messageBox.appendChild(document.createTextNode(message));
+  messageBox.classList.add(messageType);
+  messageBox.style.display = 'block';
+
+  setTimeout(() => {
+      messageBox.style.display = 'none';
+  }, 6000); // Display the message for 4 seconds
+}
+
+if (errorMessage!== '') {
+  console.log(errorMessage)
+    showMessage(errorMessage, 'error');
+    errorMessage=''
+} else if (successMessage!== '') {
+    showMessage(successMessage, 'success');
+    successMessage=''
+}
+</script>
+
+
+<%- include('partials/Adminfooter') %>

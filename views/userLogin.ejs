@@ -1,0 +1,433 @@
+﻿<%- include('userSidePartials/UserHeader') %>
+<style>
+    
+#loading-screen {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(155, 149, 149, 0.8);
+    text-align: center;
+    z-index: 1000;
+}
+
+.spinner {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #3498db;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 20% auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+</style>
+<%- include('userSidePartials/UserMobileHeader') %>
+
+<div id="loading-screen">
+    <div class="spinner"></div>
+    <p>Loading...</p>
+</div>
+
+    <main class="main">
+        <div class="page-header breadcrumb-wrap">
+            <div class="container">
+                <div class="breadcrumb">
+                    <a href="/" rel="nofollow">Home</a>
+                    <span></span> Pages
+                    <span></span> Login
+                </div>
+            </div>
+        </div>
+        <section class="pt-50 pb-100">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-10 m-auto">
+                        <div class="row">
+
+
+
+                            <div class="col-lg-5 m-auto">
+                                <div class="login_wrap widget-taber-content p-30 background-white border-radius-10 mb-md-5 mb-lg-0 mb-sm-5">
+                                    <div class="padding_eight_all bg-white">
+                                        <div class="heading_s1">
+                                            <h3 class="mb-30">Login</h3>
+                                        </div>
+                                        <% if(errMsg){ %>
+                                            <span id="errorMessageId" class="text-danger"><%= errMsg  %></span>
+                                            <% } %>
+                                        <form action="/login" method="post" onsubmit="return validateForm()">
+                                            <div class="form-group">
+                                                <input type="email" required="" name="email" placeholder="Your Email">
+                                                <span class="text-danger"  id="emailMessage"></span>
+                                            </div>
+                                            <div class="form-group">
+                                                <input required="" type="password" name="password" placeholder="Password">
+                                                <span class="text-danger"  id="passwordMessage"></span>
+                                            </div>
+                                            <div class="d-flex justify-content-end"><a href="/forgot-password">Forgot Password? </a></div>
+                                            <!-- <div class="login_footer form-group">
+                                                <div class="chek-form">
+                                                    <div class="custome-checkbox">
+                                                        <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox1" value="">
+                                                        <label class="form-check-label" for="exampleCheckbox1"><span>Remember me</span></label>
+                                                    </div>
+                                                </div>
+                                                <a class="text-muted" href="#">Forgot password?</a>
+                                            </div> -->
+                                            <div class="form-group">
+                                                <button type="submit" class="btn btn-fill-out btn-block hover-up" name="login">Log in</button>
+                                            </div>
+                                           
+                                        </form>
+                                        <div class="text-muted text-center">Don't have an account? <a href="register">Sign up now</a></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-1 justify-content-end "> <div class="bg-dark h-100" style="width: 5px;" > </div></div>
+
+
+                            <div class="col-lg-6 m-auto">
+                                <div class="login_wrap widget-taber-content p-30 background-white border-radius-5">
+                                    <div class="padding_eight_all bg-white">
+                                        <div class="heading_s1">
+                                            <h3 class="mb-30">Login with OTP</h3>
+                                        </div>
+                                     
+                                        <div class="countdown d-flex justify-content-end"></div>
+                                        <form id="email-form-element" action="/verify-otp" method="post" >
+                                            <div class="form-group">
+                                                <input type="email" class="otpemail" required="" value="" id="otpemail" name="email" placeholder="Your Email">
+                                                <span class="text-danger" id="otpemailMessage"></span>
+                                            </div>
+                                            <div class="form-group">
+                                                <button type="button" onclick="sendOtpAndStartTimer()" class="btn btn-fill-out btn-block hover-up" id="send-otp-button" id="send-otp-button" name="send-otp">Send OTP</button>
+                                            </div>
+
+                                            <div id="otp-form" style="display: none;">
+        
+
+                                            <div class="form-group" >
+                                                <input required="" type="number" name="otp" placeholder=" Enter your Otp">
+                                                <span class="text-danger" id="otpMessage"></span>
+                                            </div>
+
+                                            <div class="form-group d-flex justify-content-between">
+                                                <button type="submit" class="btn btn-fill-out btn-block hover-up" name="verify-otp">Verify OTP</button>
+                                                <a><h6 id="resend-otp-button" style="display: none;"> Resend OTP</h6></a>
+                                              </div>
+                                            <!-- <div class="login_footer form-group">
+                                                <div class="chek-form">
+                                                    <div class="custome-checkbox">
+                                                        <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox1" value="">
+                                                        <label class="form-check-label" for="exampleCheckbox1"><span>Remember me</span></label>
+                                                    </div>
+                                                </div>
+                                                <a class="text-muted" href="#">Forgot password?</a>
+                                            </div> -->
+                                            </div>
+                                        </form>
+                                    </div>
+                                        <div class="text-muted text-center">Don't have an account? <a href="register">Sign up now</a></div>
+                                   
+                                        </div>
+                                        </div>
+                                        </div>
+                                        <div id="toast"  style="display: none;  position: fixed;
+                                        bottom: 20px;
+                                        left: 50%;
+                                        transform: translateX(-50%);
+                                        background-color: #333;
+                                        color: #fff;
+                                        padding: 10px 20px;
+                                        border-radius: 5px;
+                                        z-index: 1000;"></div>
+
+                            
+
+
+
+
+
+
+
+
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+
+
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.5/dist/sweetalert2.min.js"></script>
+<script>
+    setTimeout(()=>{
+    document.getElementById('errorMessageId').style.display='none'
+            },4000)
+
+    if('<%= errMsg %>'==='YOU ARE BLOCKED BY ADMININSTRATORS'){
+        Swal.fire({
+            title: 'error',
+            text: 'YOU ARE BLOCKED BY ADMININSTRATORS',
+            icon: 'warning',
+        })
+    }
+
+    function sendOtpAndStartTimer() {
+        // Call the existing sendOtp function (replace this with the actual function call)
+        const otpemail = document.getElementById('otpemail');
+    const otpemailMessage = document.getElementById('otpemailMessage');
+    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+
+    otpemailMessage.textContent = '';
+
+    if (!otpemail.value) {
+        otpemailMessage.textContent = 'Email is required';
+        otpemail.classList.add('error-input');
+        return;
+    }
+
+    if (!emailPattern.test(otpemail.value)) {
+        otpemailMessage.textContent = 'Invalid email format';
+        otpemail.classList.add('error-input');
+        return;
+    }
+        sendOtp();
+        
+        
+    }
+    
+
+    const otpInput = document.querySelector('[name="otp"]');
+const otpMessage = document.querySelector('[id="otpMessage"]');
+
+otpInput.addEventListener('input', function() {
+  // Validate the OTP value
+  if (otpInput.value.length !== 6) {
+    otpMessage.textContent = 'The OTP must be 6 characters long.';
+  } else {
+    otpMessage.textContent = '';
+  }
+});
+
+    function validateForm() {
+        // Get all input fields
+        const emailInput = document.querySelector('[name="email"]');
+        const passwordInput = document.querySelector('[name="password"]');
+      
+        // Get all validation messages
+        const emailMessage = document.querySelector('[id="emailMessage"]');
+        const passwordMessage = document.querySelector('[id="passwordMessage"]');
+      
+        // Clear all validation messages
+        emailMessage.textContent = '';
+        passwordMessage.textContent = '';
+      
+        // Validate the email field
+        if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(emailInput.value)) {
+          emailMessage.textContent = 'Please enter a valid email address.';
+        }
+      
+        // Validate the password field
+        if (passwordInput.value.length < 6) {
+          passwordMessage.textContent = 'Please enter a password of at least 6 characters.';
+        }
+      
+        // If all fields are valid, return true
+        if (emailMessage.textContent === '' && passwordMessage.textContent === '') {
+          return true;
+        }
+      
+        // Otherwise, return false
+        return false;
+      }
+
+
+      
+    let interval;     
+   async function sendOtp() {
+    let email =  document.querySelector('.otpemail').value
+    console.log(email)
+    if(email) {
+        // Display loading screen
+        showLoadingScreen();
+        try{
+        let response = await fetch('/sendOtp',{
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({email})
+        })
+        if(response.status === 200) {
+         //   <!-- alert("this is working status code") -->
+
+          // Email form was successfully submitted, show the toast message
+          const toast = document.getElementById('toast');
+          toast.textContent = 'Email sent successfully!';
+          toast.style.backgroundColor = '#28a745'; // Set a green background color for success
+          toast.style.display = 'block';
+
+          // Hide the toast message after a few seconds (e.g., 3 seconds)
+          setTimeout(() => {
+              toast.style.display = 'none';
+          }, 3000);
+
+          const currentTime = new Date().getTime();
+            localStorage.setItem('otpTimerStart', currentTime);
+            localStorage.setItem('otpStart',true)
+          startTimer();
+       
+          document.getElementById('send-otp-button').style.display= 'none'
+          document.getElementById('otp-form').style.display = 'block';     
+    }else if(response.status===403){
+        Swal.fire({
+            title: 'error',
+            text: 'YOU ARE BLOCKED BY ADMININSTRATORS',
+            icon: 'warning',
+        })
+    }
+    else{
+        Swal.fire({
+            title: 'error',
+            text: response.message,
+            icon: 'warning',
+        })
+    }
+   }catch (error) {
+    console.error(error);
+} finally {
+    // Hide loading screen
+    hideLoadingScreen();
+}
+}
+}
+
+
+   function startTimer() {
+    let timer = "5:00";
+    let timerArray = timer.split(':');
+    let minutes = parseInt(timerArray[0], 10);
+    let seconds = parseInt(timerArray[1], 10);
+
+    const timerStart = localStorage.getItem('otpTimerStart');
+      
+    if (timerStart) {
+        const elapsedTime = new Date().getTime() - parseInt(timerStart);
+        const remainingTime = 5 * 60 * 1000 - elapsedTime; // 5 minutes in milliseconds
+        minutes = Math.floor(remainingTime / 60000);
+        seconds = Math.floor((remainingTime % 60000) / 1000);
+    }
+
+    interval = setInterval(function () {
+        if (minutes === 0 && seconds === 0 || minutes < 0){
+            clearInterval(interval);
+            // Timer has reached 0:00, show the "Resend OTP" button
+            document.getElementById('resend-otp-button').style.display = 'block';
+        } else {
+            document.getElementById('send-otp-button').style.display= 'none'
+            document.getElementById('otp-form').style.display = 'block';   
+            if (seconds === 0) {
+                minutes--;
+                seconds = 59;
+            } else {
+                seconds--;
+            }
+
+            var formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+            var formattedSeconds = seconds < 10 ? '0' + seconds : seconds;
+
+            $('.countdown').html(formattedMinutes + ':' + formattedSeconds);
+        }
+    }, 1000);
+}
+
+// Add a click event listener for the "Resend OTP" button
+document.getElementById('resend-otp-button').addEventListener('click', async function () {
+    clearInterval(interval);
+    await resendOtp();
+    startTimer()
+    sendOtp() // Reset the timer to the initial value
+   // startTimer();
+});
+
+async function resendOtp() {
+    let email = document.querySelector('.otpemail').value;
+    console.log(email);
+
+    if (email) {
+        showLoadingScreen();
+        try{
+        let response = await fetch('/sendOtp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+        });
+
+        if (response.status === 200) {
+            // Email form was successfully submitted, show the toast message for resend
+            const toast = document.getElementById('toast');
+            toast.textContent = 'OTP resent successfully!';
+            toast.style.backgroundColor = '#28a745'; // Set a green background color for success
+            toast.style.display = 'block';
+
+            // Hide the toast message after a few seconds (e.g., 3 seconds)
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+        else if(response.status===403){
+            Swal.fire({
+                title: 'error',
+                text: 'YOU ARE BLOCKED BY ADMININSTRATORS',
+                icon: 'warning',
+            })
+        }
+        else{
+            Swal.fire({
+                title: 'error',
+                text: response.message,
+                icon: 'warning',
+            })
+        }
+    } catch (error) {
+        console.error(error);
+    } finally {
+        // Hide loading screen
+        hideLoadingScreen();
+    }
+    }
+}
+
+
+window.addEventListener('load', function () {
+    const timerStart = localStorage.getItem('otpTimerStart');
+    if (timerStart) {
+        startTimer();
+    }
+});
+
+
+function showLoadingScreen() {
+    // Show your loading screen here
+    const loadingScreen = document.getElementById('loading-screen');
+    loadingScreen.style.display = 'block';
+}
+
+function hideLoadingScreen() {
+    // Hide your loading screen here
+    const loadingScreen = document.getElementById('loading-screen');
+    loadingScreen.style.display = 'none';
+}
+
+</script>
+
+
+    <%- include('userSidePartials/UserFooter') %>

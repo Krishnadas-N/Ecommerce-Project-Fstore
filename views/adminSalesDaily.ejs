@@ -1,0 +1,295 @@
+<%- include('partials/Adminheader') %>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
+
+body{
+    font-family: 'Open Sans', sans-serif;
+    
+}
+.search{
+  
+  top:6px;
+  left:10px;
+}
+
+.form-control{
+    
+    border:none;
+    padding-left:32px;
+}
+
+.form-control:focus{
+    
+    border:none;
+    box-shadow:none;
+}
+
+.green{
+    
+    color:green;
+}
+.modal.fade:not(.in) {
+  opacity: 1 !important;
+}
+
+</style>
+<!-- Add these stylesheet links to your head section -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.css" rel="stylesheet">
+
+<!-- Add these script links at the end of your body section, after jQuery and Bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+<!-- Bootstrap CSS and JavaScript -->
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+		<!-- Page wrapper start -->
+		<div class="page-wrapper">
+
+			<!-- Sidebar wrapper start -->
+      <%- include('partials/Adminnav',{dashboard:true}) %>
+			<!-- Sidebar wrapper end -->
+
+			<!-- *************
+				************ Main container start *************
+			************* -->
+			<div class="main-container">
+
+				<!-- Page header starts -->
+        <%- include('partials/adminPageHeader',{dashboard:true,searchFormAction:'#'}) %>
+				<!-- Page header ends -->
+        <div class="d-flex ms-4 me-4 justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+          <div class="btn-toolbar mb-2 mb-md-0 d-flex justify-content-end">
+           <!-- Button to trigger the modal -->
+           <button id="showGraphButton" data-toggle="modal" data-target="#salesGraphModal">Show Graph</button>
+
+          </div>
+        </div>
+        
+        <!-- Modal -->
+          <!-- Modal for displaying the graph -->
+  <div class="modal fade" id="salesGraphModal" tabindex="-1" role="dialog" aria-labelledby="salesGraphModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="salesGraphModalLabel">Sales Graph</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- Canvas for the sales graph -->
+          <canvas id="salesGraph" width="400" height="200"></canvas>
+          <!-- Canvas for the customer growth graph -->
+          <canvas id="customerGraph" width="400" height="200"></canvas>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+        
+				<!-- Content wrapper scroll start -->
+				<div class="content-wrapper-scroll">
+
+					<!-- Content wrapper start -->
+					<div class="content-wrapper">
+
+            <div class="row d-flex">
+              <form id="filterForm">
+                <label for="startDate">Start Date:</label>
+                <input type="date" id="startDate" name="startDate" data-input required>
+                <label for="endDate">End Date:</label>
+                <input type="date" id="endDate" name="endDate" data-input required>
+                <input type="radio" name="format" value="excel">Excel
+                <input type="radio" name="format" value="pdf">PDF
+                <button type="submit">Download</button>
+              </form>
+            </div>
+            
+            
+             
+              <div class="row">
+                <div class="col-lg-10 mx-auto">
+                  <div class="card rounded shadow border-0">
+                    <div class="card-body bg-white rounded">
+                      <div class="table-responsive">
+                        <table id="example" style="width:100%" class="table table-striped table-bordered">
+                          <thead>
+                            <tr>
+                              <th>Date</th>
+                              <th>Day</th>
+                              <th>Total orders</th>
+                              <th>Revenue</th>
+                              <th>Most solded products</th>
+                              <th>totalCancelledOrders:</th>
+                              <th>totalProfit:</th>
+                              
+                              <th>customersSignedIn</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <% dailySalesDataArray.forEach(dailySalesData => { %>
+                              <tr>
+                                <td><%= dailySalesData.date %></td>
+                                <td><%= dailySalesData.Day %></td>
+                                <td><%= dailySalesData.totalOrders %></td>
+                                <td>INR <%= dailySalesData.totalRevenue %></td>
+                                <td>
+                                  <ul>
+                                    <%= dailySalesData.mostSoldProducts %> 
+                                  </ul>
+                                </td>
+                                
+                                <td><%= dailySalesData.totalCancelledOrders %></td>
+                                <td><%= dailySalesData.totalProfit %></td>
+                                <td><%= dailySalesData.customersSignedIn %></td>
+                                <!-- Add more table data cells for additional data -->
+                              </tr>
+                            <% }) %>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            
+                    
+
+					</div>
+                    </div>
+                    </div>
+                    </div>
+
+
+
+                    <script>
+                      const dailySalesData = <%- JSON.stringify(dailySalesDataArray) %>;
+
+                      // JavaScript code to handle the button click and display the graph
+                      document.getElementById('showGraphButton').addEventListener('click', function () {
+                        // Fetch data for the graph (replace this with your data fetching logic)
+                        const labels = dailySalesData.map((day) => day.Day);
+                        const revenueData = dailySalesData.map((day) => day.totalRevenue);
+                        const customerGrowthData = dailySalesData.map((day) => day.customersSignedIn);
+                  
+                        // Create the sales graph using Chart.js
+                        const salesCtx = document.getElementById('salesGraph').getContext('2d');
+                        new Chart(salesCtx, {
+                          type: 'line',
+                          data: {
+                            labels: labels,
+                            datasets: [
+                              {
+                                label: 'Revenue',
+                                data: revenueData,
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 2,
+                              },
+                            ],
+                          },
+                          options: {
+                            scales: {
+                              x: {
+                                beginAtZero: true,
+                              },
+                              y: {
+                                beginAtZero: true,
+                              },
+                            },
+                          },
+                        });
+                  
+                        // Create the customer growth graph using Chart.js
+                        const customerCtx = document.getElementById('customerGraph').getContext('2d');
+                        new Chart(customerCtx, {
+                          type: 'line',
+                          data: {
+                            labels: labels,
+                            datasets: [
+                              {
+                                label: 'Customer Growth',
+                                data: customerGrowthData,
+                                borderColor: 'rgba(255, 99, 132, 1)', // Customize the color as needed
+                                borderWidth: 2,
+                              },
+                            ],
+                          },
+                          options: {
+                            scales: {
+                              x: {
+                                beginAtZero: true,
+                              },
+                              y: {
+                                beginAtZero: true,
+                              },
+                            },
+                          },
+                        });
+                  
+                        // Show the modal
+                       
+                      });
+                  
+                    
+
+                      const form = document.getElementById('filterForm');
+
+                      form.addEventListener('submit', async (event) => {
+                        event.preventDefault();
+                  
+                        const startDate = document.getElementById('startDate').value;
+                        const endDate = document.getElementById('endDate').value;
+                        const format = document.querySelector('input[name="format"]:checked').value;
+                  
+                        try {
+                          // Send the data to the backend using Fetch API or any other method you prefer
+                          const response = await fetch(`/admin/generateDailyReport?startDate=${startDate}&endDate=${endDate}&format=${format}`);
+                          
+                  
+                          if (response.ok) {
+                            const contentDisposition = response.headers.get('content-disposition');
+                            const filename = contentDisposition.split('filename=')[1];
+                            const blob = await response.blob();
+                      
+                            if (format === 'excel' || format === 'pdf') {
+                              // Create a temporary link element to trigger the download
+                              const url = window.URL.createObjectURL(blob);
+                              const a = document.createElement('a');
+                              a.href = url;
+                              a.download = filename;
+                              a.style.display = 'none';
+                              document.body.appendChild(a);
+                              a.click();
+                              window.URL.revokeObjectURL(url);
+                              document.body.removeChild(a);
+                            } else {
+                              console.log('Invalid format');
+                            }
+                          } else {
+                            console.error('Error:', response.statusText);
+                          }
+                        } catch (error) {
+                          console.error('Error:', error);
+                        }
+                      });
+                      </script>
+                      
+                   
+                            
+                      
+
+   <%- include('partials/Adminfooter') %>
+		

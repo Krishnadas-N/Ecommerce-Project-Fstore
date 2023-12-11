@@ -1,0 +1,191 @@
+<%- include('partials/Adminheader') %>
+<link href="/stylesheets/bannerStyle.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+    .toggle-button {
+        display: inline-block;
+        cursor: pointer;
+    }
+
+    .toggle-icon {
+        font-size: 24px;
+        margin-right: 5px;
+    }
+
+    .active {
+        color: green; /* Color for the "active" state */
+    }
+
+    .inactive {
+        color: red; /* Color for the "inactive" state */
+    }
+</style>
+<div class="page-wrapper">
+<%- include('partials/Adminnav',{dashboard:false}) %>
+
+
+
+
+<div class="main-container">
+    <%- include('partials/adminPageHeader',{dashboard:false,searchFormAction:'#'}) %>
+
+    <div class="d-flex ms-4 me-4 justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h3 class="h3 text-primary">Banner Management</h3>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <div class="btn-group me-2">
+                <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#createBannerModal">
+                    + Add Banner
+                </button>
+            </div>
+            
+        </div>
+    </div>
+                        <!-- Modal for creating a bANNERS -->
+                        <!-- Modal for creating a banners -->
+                        <div class="modal fade" id="createBannerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Create Banner</h5>
+                                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- Banner creation form -->
+                                        <form id="createBannerForm" enctype="multipart/form-data">
+                                            <div class="mb-3">
+                                                <label for="bannerTitle" class="form-label">Title</label>
+                                                <input type="text" class="form-control" id="bannerTitle" name="title" required>
+                                                <small class="text-danger" id="titleValidationMessage"></small>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="bannerImage" class="form-label">Banner Image</label>
+                                                <input type="file" class="form-control" id="bannerImage" name="image" accept=".jpg, .jpeg, .png, .gif, .webp" required>
+                                                <small class="text-danger" id="imageValidationMessage"></small>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="bannerDescription" class="form-label">Description</label>
+                                                <textarea class="form-control" id="bannerDescription" name="description"></textarea>
+                                                <small class="text-danger" id="descriptionValidationMessage"></small>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="bannerLink" class="form-label">Link To Navigate</label>
+                                                <input type="text" class="form-control" id="bannerLink" name="link" required>
+                                                <small class="text-danger" id="linkValidationMessage"></small>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="bannerPosition" class="form-label">Postiton to appear</label>
+                                                <input type="number" class="form-control" id="bannerPosition" name="position" required>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Create</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+    <section class="light">
+        <div class="container py-2">
+            <!-- <div class="h1 text-center text-dark" id="pageHeaderTitle">My Cards Light</div> -->
+    
+           <% banners?.forEach((item)=> {%>
+            <article class="postcard light blue">
+                <a class="postcard__img_link" href="#">
+                    <img class="postcard__img" src="/<%= item.image %>" alt="Image Title" />
+                </a>
+                <div class="postcard__text t-dark">
+                    <h1 class="postcard__title red"><a href="#"><%= item.title %></a></h1>
+                    <div class="postcard__subtitle small">
+                        
+                    </div>
+                    <div class="postcard__bar"></div>
+                    <div class="postcard__preview-txt"><%= item.description %></div>
+                    <div class="postcard__subtitle">Position to Appear : <%= item.position %></div>
+                    <ul class="postcard__tagbox">
+                        <li>
+                                <button class="btn btn-success btn-sm rounded-0 me-3 edit-button" type="button" data-toggle="modal" data-target="#editModal<%= item.id %>"  data-id="<%= item.id %>" title="Edit"><i class="fa fa-edit"></i></button>
+                           </li>
+                            <li>
+                                <button class="btn btn-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete" onclick="deleteBanner('<%= item._id %>')"><i class="fa fa-trash"></i></button>
+                          </li>
+                          <li>
+                            <button class="btn bg-white btn-sm rounded-0 toggle-button ms-4" type="button" data-toggle="tooltip" data-placement="top" title="Toggle" onclick="toggleBanner('<%= item._id %>','<%= item.isActive  %>')">
+                                <i id="toggleIcon<%= item._id %>" class="fa <%= item.isActive ? 'fa-toggle-on active' : 'fa-toggle-off inactive' %>"></i>
+                            </button>
+                          </li>
+                    </ul>
+                                     <!-- The Edit Modal -->
+                                                <div class="modal fade" id="editModal<%= item.id %>" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <!-- Modal Header -->
+                                                            <div class="modal-header">
+                                                                <h4 class="modal-title" id="editModalLabel">Edit Banner Details</h4>
+                                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                            </div>
+                                                            <!-- Modal body -->
+                                                            <div class="modal-body">
+                                                                <!-- Include a form here to edit the details -->
+                                                                <!-- You can use text inputs, textareas, etc. -->
+                                                                <form action="" id="<%= item._id %>" enctype="multipart/form-data">
+                                                                    <div class="mb-3">
+                                                                        <label for="EditbannerTitle_<%= item._id %>" class="form-label">Title</label>
+                                                                        <input type="text" class="form-control" id="EditbannerTitle_<%= item._id %>" name="title" value="<%= item.title %>" required>
+                                                                        <small class="text-danger" id="EdittitleValidationMessage"></small>
+                                                                    </div>
+                                                                    <div class="mb-3">
+                                                                        <label for="EditbannerImage_<%= item._id %>" class="form-label">Banner Image</label>
+                                                                        <br>
+                                                                         <div class="border-2 mt-1 " style=" background:grey;position: relative;width: 49px; height: 48px ;" >
+                                                                    <img src="/<%= item.image %>" alt="<%= item.name %> Image" style="width: 45px; height: 45px ;position:relative; margin-top:2px ;margin-left:2px">
+                                                                        </div>
+                                                                  
+                                                                     <br>
+                                                                        <input type="file" class="form-control" id="EditbannerImage_<%= item._id %>" name="image" accept=".jpg, .jpeg, .png, .gif, .webp" >
+                                                                        <small class="text-danger" id="EditimageValidationMessage"></small>
+                                                                    </div>
+                                                                    <div class="mb-3">
+                                                                        <label for="EditbannerDescription_<%= item._id %>" class="form-label">Description</label>
+                                                                        <textarea class="form-control" id="EditbannerDescription_<%= item._id %>" name="description" ><%= item.description %></textarea>
+                                                                        <small class="text-danger" id="EditdescriptionValidationMessage"></small>
+                                                                    </div>
+                                                                    <div class="mb-3">
+                                                                        <label for="EditbannerLink_<%= item._id %>" class="form-label">Link To Navigate</label>
+                                                                        <input type="text" class="form-control" id="EditbannerLink_<%= item._id %>" name="link" value="<%= item._link %>" required>
+                                                                        <small class="text-danger" id="EditlinkValidationMessage"></small>
+                                                                    </div>
+                                                                    <div class="mb-3">
+                                                                        <label for="EditbannerPosition_<%= item._id %>" class="form-label">Postiton to appear</label>
+                                                                        <input type="number" class="form-control" id="EditbannerPosition_<%= item._id %>" name="position" value="<%= item.position %>" required>
+                                                                    </div>
+                                                                   
+                                                               
+                                                            </div>
+                                                            <!-- Modal footer -->
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-primary" onclick="onclickForm('<%= item._id %>')" id="editSubmitButton">Save Changes</button>
+                                                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                                                
+                                                            </div>
+                                                        </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                             
+                </div>
+            </article>
+          <% }) %>
+        </div>
+    </section>
+</div>
+</div>
+
+
+<script src="/javascripts/ADMIN/BannerManagement.js"></script>
+
+
+
+
+    <%- include('partials/Adminfooter') %>

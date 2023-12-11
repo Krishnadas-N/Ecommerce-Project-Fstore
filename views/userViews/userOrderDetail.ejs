@@ -1,0 +1,531 @@
+
+<%- include('userSidePartials/UserHeader') %>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pixeden-stroke-7-icon@1.2.3/pe-icon-7-stroke/dist/pe-icon-7-stroke.min.css">
+
+<style>
+  .returned-step .step-title {
+    color: red;
+}
+.canceled-order {
+  width: 100%;
+  padding: 20px;
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  text-align: center;
+}
+.canceled-order .step-icon {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+.canceled-order .step-title {
+  font-size: 18px;
+  font-weight: bold;
+}
+    
+.steps .step {
+    display: block;
+    width: 100%;
+    margin-bottom: 35px;
+    text-align: center
+}
+
+.steps .step .step-icon-wrap {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 80px;
+    text-align: center
+}
+
+.steps .step .step-icon-wrap::before,
+.steps .step .step-icon-wrap::after {
+    display: block;
+    position: absolute;
+    top: 50%;
+    width: 50%;
+    height: 3px;
+    margin-top: -1px;
+    background-color: #e1e7ec;
+    content: '';
+    z-index: 1
+}
+
+.steps .step .step-icon-wrap::before {
+    left: 0
+}
+
+.steps .step .step-icon-wrap::after {
+    right: 0
+}
+
+.steps .step .step-icon {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+    border: 1px solid #e1e7ec;
+    border-radius: 50%;
+    background-color: #f5f5f5;
+    color: #374250;
+    font-size: 38px;
+    line-height: 81px;
+    z-index: 5
+}
+
+.steps .step .step-title {
+    margin-top: 16px;
+    margin-bottom: 0;
+    color: #606975;
+    font-size: 14px;
+    font-weight: 500
+}
+
+.steps .step:first-child .step-icon-wrap::before {
+    display: none
+}
+
+.steps .step:last-child .step-icon-wrap::after {
+    display: none
+}
+
+.steps .step.completed .step-icon-wrap::before,
+.steps .step.completed .step-icon-wrap::after {
+    background-color: #0da9ef
+}
+
+.steps .step.completed .step-icon {
+    border-color: #0da9ef;
+    background-color: #0da9ef;
+    color: #fff
+}
+.rating-container {
+    font-size: 0; /* Remove the default font size */
+  }
+  
+  .rating-container .star {
+    display: inline-block;
+    font-size: 40px; /* Adjust the size as needed */
+    cursor: pointer;
+    color: gray; /* Default color is gray */
+  }
+  
+  .rating-container .star.active {
+    color: gold; /* Change color to gold for active (selected) stars */
+  }
+  
+
+@media (max-width: 576px) {
+    .flex-sm-nowrap .step .step-icon-wrap::before,
+    .flex-sm-nowrap .step .step-icon-wrap::after {
+        display: none
+    }
+}
+
+@media (max-width: 768px) {
+    .flex-md-nowrap .step .step-icon-wrap::before,
+    .flex-md-nowrap .step .step-icon-wrap::after {
+        display: none
+    }
+}
+
+@media (max-width: 991px) {
+    .flex-lg-nowrap .step .step-icon-wrap::before,
+    .flex-lg-nowrap .step .step-icon-wrap::after {
+        display: none
+    }
+}
+
+@media (max-width: 1200px) {
+    .flex-xl-nowrap .step .step-icon-wrap::before,
+    .flex-xl-nowrap .step .step-icon-wrap::after {
+        display: none
+    }
+}
+
+.bg-faded, .bg-secondary {
+    background-color: #f5f5f5 !important;
+}
+    .card {
+        box-shadow: 0 20px 27px 0 rgb(0 0 0 / 5%);
+    }
+    .card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #fff;
+        background-clip: border-box;
+        border: 0 solid rgba(0,0,0,.125);
+        border-radius: 1rem;
+    }
+    .text-reset {
+        --bs-text-opacity: 1;
+        color: inherit!important;
+    }
+    a {
+        color: #5465ff;
+        text-decoration: none;
+    }
+</style>
+<%- include('userSidePartials/UserMobileHeader') %>
+
+<main class="main">
+    <div class="page-header breadcrumb-wrap">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="index.html" rel="nofollow">Home</a>
+                <span></span> Orders
+                <span></span> Details
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="container padding-bottom-3x mb-1">
+            <div class="card mb-3">
+              <div class="p-4 text-center text-white text-lg bg-dark rounded-top"><span class="text-uppercase">Tracking Order No - </span><span class="text-medium"><%= order.orderId %></span></div>
+              <div class="d-flex flex-wrap flex-sm-nowrap justify-content-between py-3 px-2 bg-secondary">
+                <div class="w-100 text-center py-1 px-2"><span class="text-medium">Shipped Via:</span> UPS Ground</div>
+                <div class="w-100 text-center py-1 px-2"><span class="text-medium">Status:</span> Checking Quality</div>
+                <%
+                // Assuming order.orderDate is a Date object
+                const originalDate = order.orderDate;
+                const fiveDaysLater = new Date(originalDate);
+                fiveDaysLater.setDate(originalDate.getDate() + 5);
+              %>
+
+              
+
+                <div class="w-100 text-center py-1 px-2"><span class="text-medium">Expected Date:</span> <%= fiveDaysLater.toLocaleDateString() %></div>
+              </div>
+              <div class="card-body">
+                <% if (order.status === 'Canceled') { %>
+                  
+                    <div class="step completed active canceled-order padding-top-2x padding-bottom-1x">
+                        <div class="step-icon-wrap">
+                            <div class="step-icon">
+                                <i class="pe-7s-close-circle"></i>
+                            </div>
+                        </div>
+                        <h4 class="step-title">Order Canceled</h4>
+                    </div>
+                
+              <% } else { %>
+                <div class="steps d-flex flex-wrap flex-sm-nowrap justify-content-between padding-top-2x padding-bottom-1x"><div class="step <%= ['Pending', 'Processing', 'Shipped', 'Delivered', 'Returned'].indexOf(order.status) >= 0 ? 'completed' : '' %> <%= order.status === 'Pending' ? 'active' : '' %>">
+                  <!-- Pending Order content -->
+                  <div class="step-icon-wrap">
+                      <div class="step-icon">
+                          <i class="<%= order.status === 'Pending' ? 'pe-7s-cart' : 'pe-7s-check' %>"></i>
+                      </div>
+                  </div>
+                  <h4 class="step-title">Pending Order</h4>
+              </div>
+              
+              <div class="step <%= ['Processing', 'Shipped', 'Delivered', 'Returned'].indexOf(order.status) >= 0 ? 'completed' : '' %> <%= order.status === 'Processing' ? 'active' : '' %>">
+                  <!-- Processing Order content -->
+                  <div class="step-icon-wrap">
+                      <div class="step-icon">
+                          <i class="<%= order.status === 'Processing' ? 'pe-7s-config' : 'pe-7s-check' %>"></i>
+                      </div>
+                  </div>
+                  <h4 class="step-title">Processing Order</h4>
+              </div>
+              
+              <div class="step <%= ['Shipped', 'Delivered', 'Returned'].indexOf(order.status) >= 0 ? 'completed' : '' %> <%= order.status === 'Shipped' ? 'active' : '' %>">
+                  <!-- Shipped Order content -->
+                  <div class="step-icon-wrap">
+                      <div class="step-icon">
+                          <i class="<%= order.status === 'Shipped' ? 'pe-7s-medal' : 'pe-7s-check' %>"></i>
+                      </div>
+                  </div>
+                  <h4 class="step-title">Shipped Order</h4>
+              </div>
+              
+              <div class="step <%= ['Delivered', 'Returned'].indexOf(order.status) >= 0 ? 'completed' : '' %> <%= order.status === 'Delivered' ? 'active' : '' %>">
+                  <!-- Product Delivered content -->
+                  <div class="step-icon-wrap">
+                      <div class="step-icon">
+                          <i class="<%= order.status === 'Delivered' ? 'pe-7s-car' : 'pe-7s-check' %>"></i>
+                      </div>
+                  </div>
+                  <h4 class="step-title">Product Delivered</h4>
+              </div>
+              
+              <div class="step <%= order.status === 'Returned' ? 'completed active returned-step' : ''%>">
+                <!-- Product Returned content -->
+                <div class="step-icon-wrap">
+                    <div class="step-icon">
+                        <i class="<%= order.status === 'Returned' ? 'pe-7s-refresh' : 'pe-7s-check' %>"></i>
+                    </div>
+                </div>
+                <h4 class="step-title" style="color: red;">Product Returned</h4>
+            </div>
+            
+              </div>
+              <% } %>
+            </div>
+            
+              
+              
+              
+            </div>
+          
+          </div>
+        <div class="container">
+          <!-- Title -->
+          <div class="d-flex justify-content-between align-items-center py-3">
+            <h2 class="h5 mb-0"><a href="#" class="text-muted"></a> Order <%= order.orderId %></h2>
+          </div>
+        
+          <!-- Main content -->
+          <div class="row">
+            <div class="col-lg-8">
+              <!-- Details -->
+              <div class="card mb-4">
+                <div class="card-body">
+                  <div class="mb-3 d-flex justify-content-between">
+                    <div>
+                      <span class="me-3"> <%= order.orderDate.toLocaleDateString() %></span>
+                      <span class="me-3"><%= order.orderId %></span>
+                      <span class="me-3"><%= order.paymentMethod %> &&  <%= order.paymentId %></span>
+                      <span class="badge rounded-pill bg-info"><%= order.status %></span>
+                    </div>
+                    <% if(order.status !== 'Canceled' && order.status !== 'Failed' && order.status !== 'Returned'){ %>
+                      <div class="d-flex">
+                          <a href="/generate-invoice/<%= order._id %>" class="btn btn-small btn-pdf">
+                              <i class="fas fa-file-pdf"></i> Invoice pdf
+                          </a>
+                      </div>
+                  <% } %>
+                  
+                  </div>
+                  <table class="table table-borderless">
+                    <tbody>
+                        <tr>
+                            <td>
+                              <div class="d-flex mb-2">
+                                <div class="flex-shrink-0">
+                                  <img src="/<%= order.productDetails.image  %>" alt="" width="35" class="img-fluid">
+                                </div>
+                                <div class="flex-lg-grow-1 ms-3">
+                                  <h6 class="small mb-0"><a href="#" class="text-reset"><%= order.productDetails.name  %></a></h6>
+                                  <span class="small">Price: <%= order.productDetails.price  %></span>
+                                </div>
+                              </div>
+                            </td>
+                            
+                            <td><%= order.productDetails.quantity  %></td>
+                            <td class="text-end">INR <%= order.productDetails.quantity * order.productDetails.price %></td>
+                          </tr>
+                         
+                          <tr>
+                            <td colspan="3" style="text-align: center; font-weight: bold; color: #333;">OTHER ITEMS IN THE SAME ORDER</td>
+
+                          </tr>
+                          <% order.items.forEach((item) => {
+                            if (item.productId.toString() !== order.productDetails._id.toString()) { %>
+                            <tr>
+                              <td>
+                                <div class="d-flex mb-2">
+                                  <div class="flex-shrink-0">
+                                    <img src="/<%= item.image %>" alt="" width="35" class="img-fluid">
+                                  </div>
+                                  <div class="flex-lg-grow-1 ms-3">
+                                    <h6 class="small mb-0"><a href="#" class="text-reset"><%= item.name %></a></h6>
+                                    <span class="small">Price: <%= item.productPrice %></span>
+                                  </div>
+                                </div>
+                              </td>
+                        
+                              <td><%= item.quantity %></td>
+                              <td class="text-end">INR <%= item.price %></td>
+                            </tr>
+                          <% } }) %>
+                      
+                    </tbody>
+                   
+                    <tfoot>
+
+                      <tr>
+                        <td colspan="2">Subtotal</td>
+                        <td class="text-end">INR <%= order.billTotal %></td>
+                      </tr>
+                      <tr>
+                        <td colspan="2">Shipping</td>
+                        <td class="text-end">INR 00.00</td>
+                      </tr>
+                      <!-- <tr>
+                        <td colspan="2">Discount (Code: NEWYEAR)</td>
+                        <td class="text-danger text-end">-$10.00</td>
+                      </tr> -->
+                      <tr class="fw-bold">
+                        <td colspan="2">TOTAL</td>
+                        <td class="text-end">INR <%= order.billTotal %></td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+              <!-- Payment -->
+              <div class="card mb-4">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-lg-6">
+                      <h3 class="h6">Payment Method</h3>
+                      <p><%= order.paymentMethod %>  <%= order.paymentId %> <br>
+                      Total: <%= order.billTotal %> <span class="badge bg-success rounded-pill"><%= order.paymentStatus %></span></p>
+                    </div>
+                    <div class="col-lg-6">
+                      <h3 class="h6">Billing address</h3>
+                      <address>
+                        <strong><%= order.userDetails[0].firstName %> <%= order.userDetails[0].lastName %></strong><br>
+                        <%= order.deliveryAddress.addressType %> <%= order.deliveryAddress.HouseNo %><br>
+                        <%= order.deliveryAddress.Street  %>  <%= order.deliveryAddress.Landmark  %> <%= order.deliveryAddress.pincode  %><br>
+                        <%= order.deliveryAddress.city  %> <%= order.deliveryAddress.State  %> <%= order.deliveryAddress.Country %><br>
+                    
+                        <abbr title="Phone">P:</abbr> <%= order.userDetails[0].mobile %>
+                      </address>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <!-- Customer Notes -->
+              <div class="card mb-4">
+                <% if(order.status === 'Delivered') { %>
+                <div class="card-body m-4">
+                  <h3 class="h6">Customer Rating</h3>
+                 
+                  <div class="rating-container" id="rating-div" data-productId="<%= order.productDetails._id %>">
+                    <% if(userRating && userRating.Ratings.length>0){ %>
+                    <% for (let i = 1; i <= 5; i++) { %>
+                      <span class="star<%= i <= userRating.Ratings[0].rating ? ' active' : '' %>" data-rating="<%= i %>">☆</span>
+                    <% } %>
+                
+                  <p>Selected Rating: <span id="selected-rating"><%=  userRating.Ratings[0].rating %></span> stars</p>
+                  <% }else{ %>
+                    <span class="star" data-rating="1">☆</span>
+                    <span class="star" data-rating="2">☆</span>
+                    <span class="star" data-rating="3">☆</span>
+                    <span class="star" data-rating="4">☆</span>
+                    <span class="star" data-rating="5">☆</span>
+                    <p>Selected Rating: <span id="selected-rating"></span> stars</p>
+                    <% } %>
+                   
+                  </div>
+                </div>
+                <% }else{ %>
+                  <div class="card-body m-4"  style="background-color: lightgray;">
+                    <h3 class="h6">Only Delivered Users</h3>
+                  </div>
+                  <% } %>
+              </div>
+              
+              
+              <div class="card mb-4">
+                <!-- Shipping information -->
+                <% if(order.status === 'Delivered') { %>
+                <div class="card-body">
+                  <h3 class="h6" style="text-align: center;" >Add a Review</h3>
+                  <% if(userReview!==null){ %>
+                  <div id="thankyou-message" style=" font-size: 20px; text-align: center; padding-top:160px ;height: 350px;">Thank you for your review! 😊</div>
+                  <% } else{ %>
+                  <form id="review-form">
+                    <div class="form-group">
+                      <label for="reviewText">Your Review:</label>
+                      <textarea class="form-control"  id="reviewText" rows="30" required style="height: 200px;"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Review</button>
+                  </form>
+                 <% } %>
+                
+                </div>
+                <% }else{ %>
+                  <div class="card-body" style="height: 400px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                    <h3 class="h6" style="text-align: center; font-weight: bold;">Order Delivered Users Only</h3>
+                </div>
+                
+                  <% } %>
+              </div>
+            </div>
+          </div>
+        </div>
+          </div>
+    
+
+
+ 
+          <script>
+           
+              const stars = document.querySelectorAll(".star");
+              const productId = document.getElementById("rating-div").getAttribute("data-productId");
+              const selectedRating  = document.getElementById('selected-rating')
+            console.log(stars,productId)
+              stars.forEach((star) => {
+                star.addEventListener("click", async () => {
+                  const rating = star.getAttribute("data-rating");
+                  selectedRating.textContent = rating;
+                  // Make an HTTP request to your server to send the rating and productId
+                  try {
+                    const response = await fetch("/order-ratings", {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({ rating, productId }),
+                    });
+            
+                    if (response.ok) {
+                      // Update the stars on the frontend to show the selected rating
+                      stars.forEach((s) => {
+                        if (s.getAttribute("data-rating") <= rating) {
+                          s.classList.add("active");
+                        } else {
+                          s.classList.remove("active");
+                        }
+                      });
+                    } else {
+                      console.error("Failed to save the rating");
+                    }
+                  } catch (error) {
+                    console.error(error);
+                  }
+                });
+              });
+
+
+              // Event listener for the review form submission
+document.getElementById("review-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  
+  const review = document.getElementById("reviewText").value;
+
+  // Make an HTTP request to your server to save the review
+  try {
+    const response = await fetch("/order-review", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ review,productId }),
+    });
+
+    if (response.ok) {
+      // Hide the form and show the thank you message
+      document.getElementById("review-form").style.display = "none";
+      document.getElementById("thankyou-message").style.display = "block";
+    } else {
+      console.error("Failed to save the review");
+    }
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+             </script>
+           
+        
+<%- include('userSidePartials/UserFooter') %>

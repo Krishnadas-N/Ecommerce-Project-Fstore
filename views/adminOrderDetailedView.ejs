@@ -1,0 +1,304 @@
+<%- include('partials/Adminheader') %>
+<style>
+    .card {
+        box-shadow: 0 20px 27px 0 rgb(0 0 0 / 5%);
+    }
+    .card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #fff;
+        background-clip: border-box;
+        border: 0 solid rgba(0,0,0,.125);
+        border-radius: 1rem;
+    }
+    .text-reset {
+        --bs-text-opacity: 1;
+        color: inherit!important;
+    }
+    a {
+        color: #5465ff;
+        text-decoration: none;
+    }
+</style>
+		<!-- Page wrapper start -->
+		<div class="page-wrapper">
+
+			<!-- Sidebar wrapper start -->
+      <%- include('partials/Adminnav',{dashboard:false}) %>
+			<!-- Sidebar wrapper end -->
+
+			<!-- *************
+				************ Main container start *************
+			************* -->
+			<div class="main-container">
+
+				<!-- Page header starts -->
+        <%- include('partials/adminPageHeader',{dashboard:false,searchFormAction:'#'}) %>
+				<!-- Page header ends -->
+                <div class="d-flex ms-4 me-4 justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h3 class="h3 text-primary">Order Management</h3>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                      
+                        
+                    </div>
+                </div>
+
+                <!-- Content wrapper scroll start -->
+				<div class="content-wrapper-scroll">
+                 
+					<!-- Content wrapper start -->
+					<div class="content-wrapper">
+                        <!-- Row start -->
+                        <div class="container-fluid">
+
+                            <div class="container">
+                              <!-- Title -->
+                              <div class="d-flex justify-content-between align-items-center py-3">
+                                <h2 class="h5 mb-0"><a href="#" class="text-muted"></a> Order #<%= orders.orderId %></h2>
+                              </div>
+                            
+                              <!-- Main content -->
+                              <div class="row">
+                                <div class="col-lg-8">
+                                  <!-- Details -->
+                                  <div class="card mb-4">
+                                    <div class="card-body">
+                                      <div class="mb-3 d-flex justify-content-between">
+                                        <div>
+                                          <span class="me-3"><%= orders.orderDate.toDateString() %></span>
+                                          <span class="me-3">#<%= orders.orderId %></span>
+                                          <span class="me-3 ">Payment Method: -<%= orders.paymentMethod %></span>
+                                          <%
+                                          const statusColors = {
+                                              "Pending": "yellow",
+                                              "Processing": "grey",
+                                              "Shipped": "green",
+                                              "Delivered": "blue",
+                                              "Canceled": "red",
+                                          };
+                                          %>
+                                          <span class="badge badge shade-<%= statusColors[orders.status] %>"><%= orders.status %></span>
+                                        </div>
+                                        <div class="d-flex">
+                                          <!-- <button class="btn btn-link p-0 me-3 d-none d-lg-block btn-icon-text"><i class="bi bi-download"></i> <span class="text">Invoice</span></button> -->
+                                          <div class="dropdown">
+                                            <button class="btn btn-link p-0 text-muted" type="button" data-bs-toggle="dropdown">
+                                              <i class="bi bi-three-dots-vertical"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                              <li><a class="dropdown-item" href="#"><i class="bi bi-pencil"></i> Edit</a></li>
+                                              <li><a class="dropdown-item" href="#"><i class="bi bi-printer"></i> Print</a></li>
+                                            </ul>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <table class="table table-borderless">
+                                        <tbody>
+                                            <% orders.items.forEach((item)=>{ %>
+                                          <tr>
+                                            <td>
+                                              <div class="d-flex mb-2">
+                                                <div class="flex-shrink-0">
+                                                  <img src="/<%= item.image  %>" width="70px" height="70px">
+                                                </div>
+                                                <div class="flex-lg-grow-1 ms-3">
+                                                  <h6 class="small mb-0"><a href="#" class="text-reset"><span>ORIGINAL PRICE: </span><span><%= item.productPrice %></span></a></h6>
+                                                  <span class="small"><span>Quantity :</span><span> <%= item.quantity %></span></span>
+                                                </div>
+                                              </div>
+                                            </td>
+                                            <td><span>Quantity :</span><span> <%= item.quantity %></span></td>
+                                            <td class="text-end">INR <%= item.price %></td>
+                                          </tr>
+                                          <% }) %>
+                                        </tbody>
+                                        <tfoot>
+                                          <tr>
+                                            <td colspan="2">Subtotal</td>
+                                            <td class="text-end"> INR <%= orders.billTotal %></td>
+                                          </tr>
+                                          <tr>
+                                            <td colspan="2">Shipping</td>
+                                            <td class="text-end">0</td>
+                                          </tr>
+                                          <tr>
+                                            <td colspan="2">Coupons Discount</td>
+                                            <td class="text-end">0</td>
+                                          </tr>
+                                          <tr>
+                                            <td colspan="2">Discount (Code: NEWYEAR)</td>
+                                            <td class="text-danger text-end">-$10.00</td>
+                                          </tr>
+                                          <tr class="fw-bold">
+                                            <td colspan="2">TOTAL</td>
+                                            <td class="text-end"> INR <%= orders.billTotal %></td>
+                                          </tr>
+                                        </tfoot>
+                                      </table>
+                                    </div>
+                                  </div>
+                                  <!-- Payment -->
+                                  <div class="card mb-4">
+                                    <div class="card-body">
+                                      <div class="row">
+                                        <div class="col-lg-4">
+                                          <h3 class="h6">Payment Method</h3>
+                                          <p><%= orders.paymentMethod %><br>
+                                          Total:INR <%= orders.billTotal %> <span class="badge bg-success rounded-pill"><%= orders.paymentStatus %></span></p>
+                                        </div>
+                                        <div class="col-lg-4">
+                                          <h3 class="h6">User Details</h3>
+                                          <address>
+                                            <strong><%= userDetail.firstName %>  <%= userDetail.lastName %></strong><br>
+                                            <%= userDetail.email %><br>
+                                            <%= userDetail.gender %>, <br>
+                                            BLOCKED:<%= userDetail.isBlocked ? "Yes" : "No" %><br>
+                                            <abbr title="Phone">P:</abbr>  <%= userDetail.mobile %>
+                                          </address>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <h3 class="h6">Billing address</h3>
+                                            <address>
+                                              <strong><%= userDetail.firstName %>  <%= userDetail.lastName %></strong><br>
+                                              <%= orders.deliveryAddress.addressType.toUpperCase() %><br>
+                                              <%= orders.deliveryAddress.HouseNo %>,<%= orders.deliveryAddress.Street %> <%= orders.deliveryAddress.pincode %><br>
+                                              <%= orders.deliveryAddress.city %> <%= orders.deliveryAddress.district %> <br>
+                                              <%= orders.deliveryAddress.State %> <%= orders.deliveryAddress.Country %>
+                                            </address>
+                                          </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-lg-4">
+                                  <!-- Customer Notes -->
+                                  <div class="card mb-4">
+                                    <div class="card-header" style="font-weight: bolder;">General Details</div>
+                                    <div class="card-body">
+                                        <form id="orderStatusForm" onsubmit="submitOrderStatusForm('<%= orders._id %>'); return false;">
+                                            <label for="orderDate" style="font-weight: bolder;">Order Date:</label><br>
+                                            <input type="text" class="mt-2 mb-2" value="<%= orders.orderDate.toDateString() %>" disabled /><br>
+                                        
+                                            <label for="orderStatus mt-4" style="font-weight: bolder;">Order Status:</label><br>
+                                            <select name="orderStatus" class="form-select mt-2" data-live-search="true">
+                                              <% switch (orders.status) {
+                                                  case 'Pending': %>
+                                              <option value="Pending" selected>Pending</option>
+                                              <option value="Processing">Processing</option>
+                                              <option value="Shipped">Shipped</option>
+                                              <option value="Delivered">Delivered</option>
+                                              <option value="Canceled">Canceled</option>
+                                              <option value="Failed" disabled>Failed</option>
+                                              <% break;
+                                                  case 'Processing': %>
+                                                  <option value="Pending" disabled>Pending</option>
+                                                  <option value="Processing" selected>Processing</option>
+                                                  <option value="Shipped">Shipped</option>
+                                                  <option value="Delivered">Delivered</option>
+                                                  <option value="Canceled">Canceled</option>
+                                                  <option value="Failed" disabled>Failed</option>
+                                              <% break;
+                                                  case 'Shipped': %>
+                                                  <option value="Pending" disabled>Pending</option>
+                                                  <option value="Processing" disabled>Processing</option>
+                                                  <option value="Shipped" selected>Shipped</option>
+                                                  <option value="Delivered">Delivered</option>
+                                                  <option value="Canceled">Canceled</option>
+                                                  <option value="Failed" disabled>Failed</option>
+                                              <% break;
+                                              case 'Delivered': %>
+                                              <option value="Pending" disabled>Pending</option>
+                                                 <option value="Processing" disabled>Processing</option>
+                                                 <option value="Shipped" disabled>Shipped</option>
+                                                 <option value="Delivered" selected>Delivered</option>
+                                                 <option value="Canceled" disabled>Canceled</option>
+                                                 <option value="Failed" disabled>Failed</option>
+                                                 <% break;
+                                               
+                                                 case 'Canceled': %>
+                                                 <option value="Pending" disabled>Pending</option>
+                                                 <option value="Processing" disabled>Processing</option>
+                                                 <option value="Shipped" disabled>Shipped</option>
+                                                 <option value="Delivered" disabled>Delivered</option>
+                                                 <option value="Canceled">Canceled</option>
+                                                 <option value="Failed" disabled>Failed</option>
+                                              <% break;  
+                                              case 'Returned': %>    
+                                              <option value="Pending" disabled>Pending</option>
+                                              <option value="Processing" disabled>Processing</option>
+                                              <option value="Shipped" disabled>Shipped</option>
+                                              <option value="Delivered" disabled>Delivered</option>
+                                              <option value="Canceled" disabled>Canceled</option>
+                                              <option value="Returned" selected>Returned</option>
+                                              <option value="Failed" disabled>Failed</option>
+                                           <% break;                                          
+                                                  default: %>
+                                                  <option value="Pending" disabled>Pending</option>
+                                                  <option value="Processing" disabled>Processing</option>
+                                                  <option value="Shipped" disabled>Shipped</option>
+                                                  <option value="Delivered" disabled>Delivered</option>
+                                                  <option value="Canceled" disabled>Canceled</option>
+                                                  <option value="Failed" >Failed</option>
+                                              <% } %>
+                                          </select><br>
+                                        <button type="submit" class="btn btn-primary" >Save Order</button>
+                                        </form>
+                                        
+                                    </div>
+                                  </div>
+                                  <div class="card mb-4">
+                                    <!-- Shipping information -->
+                                    <div class="card-body">
+                                      <h5 class="h6" style="float: left;">USER REQUESTS</h5>
+                                      <% if (orders.requests && orders.requests.length > 0) { %>
+                                                                    <% orders.requests.forEach(request => { %>
+                                                                      <% if (request.type === 'Cancel' && request.status === 'Pending') { %>
+                                                                        <span class="badge shade-yellow">Cancel Request</span>
+                                                                      <% } else if (request.type === 'Return' && request.status === 'Pending') { %>
+                                                                        <span class="badge shade-red">Return Request</span>
+                                                                      <% } %>
+                                                                    <% }) %>
+                                                                  <% } %>
+                                      <div class="card mb-4 mt-4">
+                                        <% if (orders.status == 'Canceled' && orders.requests[0].status === 'Pending') { %>
+                                          <strong class="text-danger mb-3 text-center">Order Canceled</strong>
+                                          <input type="text" value="<%= orders.requests[0].reason  %>" readonly class="mb-3 text-center">
+                                          <button class="btn btn-primary" onclick="refundAmount('<%= orders._id %>','<%= orders.user._id %>')" >Refund Amount</button>
+                                      <% } else if (orders.status == 'Returned' && orders.requests[0].status === 'Pending') { %>
+                                          <strong  class="text-danger mb-3 text-center">Order Returned <span style="font-size: 14px; color: black;">(Reason)</span></strong>
+                                          <input type="text" value="<%= orders.requests[0].reason  %>" readonly class="mb-3 text-center">
+                                          <button class="btn btn-success w-50 mb-3 text-center ms-5" onclick="refundAmount('<%= orders._id %>','<%=  orders.user._id %>')">Accept Return & Refund Amount</button>
+                                      <% } else if (orders.requests && orders.requests.length > 0) { %>
+                                          <!-- Display other request details as needed -->
+                                          <% orders.requests.forEach(request => { %>
+                                              <!-- Example: Displaying FedEx tracking details -->
+                                              <% if (request.type == 'Return') { %>
+                                                  <strong>No requests available.</strong>
+                                                  <span><a href="#" class="text-decoration-underline" target="_self">Nothing</a> <i class="bi bi-box-arrow-up-right"></i></span>
+                                              <% } %>
+                                          <% }) %>
+                                      <% } else { %>
+                                          <p  class="h6 text-center" >No requests available.</p>
+                                      <% } %>
+                                     
+                                         
+                                         
+                                        </div> <hr>
+                                     
+                                     
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                              </div>
+                    
+                    </div>
+                    
+                  <script src="/javascripts/ADMIN/AdminOrderDetail.js"></script>  
+              
+
+                <%- include('partials/Adminfooter') %>

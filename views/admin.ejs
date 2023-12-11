@@ -1,0 +1,758 @@
+<%- include('partials/Adminheader') %>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+		<!-- Page wrapper start -->
+		<div class="page-wrapper">
+
+			<!-- Sidebar wrapper start -->
+      <%- include('partials/Adminnav',{dashboard:true}) %>
+			<!-- Sidebar wrapper end -->
+
+			<!-- *************
+				************ Main container start *************
+			************* -->
+			<div class="main-container">
+
+				<!-- Page header starts -->
+        <%- include('partials/adminPageHeader',{dashboard:true,searchFormAction:'#'}) %>
+				<!-- Page header ends -->
+
+				<!-- Content wrapper scroll start -->
+				<div class="content-wrapper-scroll">
+
+					<!-- Content wrapper start -->
+					<div class="content-wrapper">
+
+						<!-- Row start -->
+						<div class="row">
+							<div class="col-sm-4 col-12">
+								<div class="stats-tile">
+								  <div class="sale-icon-bdr">
+									<i class="bi bi-pie-chart"></i>
+								  </div>
+								  <div class="sale-details">
+									<h5>Orders</h5>
+									<h3 class="text-blue"><%= OrderCount %></h3>
+									<% if (percentageChange !== 0) { %>
+									  <p class="growth text-blue">
+										<% if (percentageChange > 0) { %>
+										  Increased <%= percentageChange.toFixed(2) %>%
+										<% } else { %>
+										  Decreased <%= Math.abs(percentageChange).toFixed(2) %>%
+										<% } %>
+									  </p>
+									  <% } %>
+										<p>Total orders placed </p>
+									  
+								  </div>
+								</div>
+							  </div>
+							  
+							  <div class="col-sm-4 col-12">
+								<div class="stats-tile">
+								  <div class="sale-icon-bdr">
+									<i class="bi bi-pie-chart"></i>
+								  </div>
+								  <div class="sale-details">
+									<h5>Products</h5>
+									<h3 class="text-blue"><%= ProductCount %></h3>
+									<% if (productPercentageChange !== 0) { %>
+									  <p class="growth text-blue">
+										<% if (productPercentageChange > 0) { %>
+										  Increased <%= productPercentageChange.toFixed(2) %>%
+										<% } else { %>
+										  Decreased <%= Math.abs(productPercentageChange).toFixed(2) %>%
+										<% } %>
+									  </p>
+									  <% }  %>
+										
+										<p>Total prdoucts added</p>
+								  </div>
+								</div>
+							  </div>
+							  
+							<div class="col-sm-4 col-12">
+								<div class="stats-tile">
+									<div class="sale-icon-bdr">
+										<i class="bi bi-box-seam"></i>
+									</div>
+									<div class="sale-details">
+										<h3 class="text-blue">INR <%= Revenue.toFixed(2) %></h3>
+									<% if (RevenuePercentageChange !== 0) { %>
+										<p class="growth text-red">
+											<% if (RevenuePercentageChange > 0) { %>
+												Increased <%= RevenuePercentageChange.toFixed(2) %>%
+											<% } else { %>
+												Decreased <%= Math.abs(RevenuePercentageChange).toFixed(2) %>%
+											<% } %>
+										</p>
+									<% }  %>
+									<p>Total Revenue generated today</p>
+									
+								</div>
+							</div>
+						</div>
+						<!-- Row end -->
+						<div class="row">
+							<div class="col-sm-4 col-12">
+								<div class="stats-tile"> <a class="btn btn-primary btn-lg mb-3" id="dailyReporta" href="/admin/generate-sales-report/daily">Get Daily Report</a>
+									  </div>
+							</div>
+							<div class="col-sm-4 col-12">
+								<div class="stats-tile"><a class="btn btn-success btn-lg mb-3" id="weeklyReporta" href="/admin/generate-sales-report/weekly">Get Weekly Report</a>
+									</div>
+							</div>
+							<div class="col-sm-4 col-12">
+								<div class="stats-tile mx-auto" ><a class="btn btn-danger btn-lg" id="yearlyReporta" href="/admin/generate-sales-report/yearly">Get Yearly Report</a>
+								</div>
+							</div>
+						</div>
+						<!-- Row start -->
+						<div class="row">
+							<div class="col-xxl-12 col-sm-12 col-12">
+							  <div class="card">
+								<div class="card-header">
+								  <div class="card-title">Orders & Revenue</div>
+								</div>
+								<div class="card-body">
+								  <canvas id="dailyOrdersRevenueChart"></canvas>
+								</div>
+							  </div>
+							</div>
+							
+						  </div>
+						  
+						<!-- Row end -->
+
+						<!-- Row start -->
+						<div class="row">
+							<div class="col-xxl-6 col-sm-12 col-12">
+								<div class="card">
+								  <div class="card-body">
+									<!-- Row start -->
+									<div class="row">
+									  <div class="col-sm-6 col-12">
+										<div class="stats-tile2-container">
+										  <div class="stats-tile2">
+											<div class="sale-icon">
+											  <i class="bi bi-pie-chart text-blue"></i>
+											</div>
+											<div class="sale-details">
+											  <h5>Current Customers</h5>
+											  <p class="growth" id="currentUserData">Loading...</p>
+											</div>
+										  </div>
+										  <div class="stats-tile2">
+											<div class="sale-icon">
+											  <i class="bi bi-pie-chart text-green"></i>
+											</div>
+											<div class="sale-details">
+											  <h5>New Customers</h5>
+											  <p class="growth" id="newUserData">Loading...</p>
+											</div>
+										  </div>
+										  <!-- Add more sections as needed for targeted user data -->
+										</div>
+									  </div>
+									  <div class="col-sm-6 col-12">
+										<canvas id="userChartData"></canvas>
+									  </div>
+									</div>
+									<!-- Row end -->
+								  </div>
+								</div>
+								<div class="card">
+									<div class="card-body">
+										<div class="scroll250">
+									  <!-- Row start -->
+									  <div class="row">
+										<div class="col-sm-6 col-lg-12">
+										  <div class="stats-tile2-container">
+											<div class="stats-tile2">
+											  <div class="sale-icon">
+												<i class="bi bi-pie-chart text-blue"></i>
+											  </div>
+											  <div class="sale-details">
+												<h5>Products Moving to Out of Stock</h5>
+												<table class="product-list-table">
+													<tr>
+													  <th>Product Name</th>
+													  <th>Count in Stock</th>
+													</tr>
+													<tbody id="movingToOutOfStockTable">
+													  <tr>
+														<td>Loading...</td>
+														<td>Loading...</td>
+													  </tr>
+													</tbody>
+												  </table>
+											  </div>
+											</div>
+											<div class="stats-tile2">
+											  <div class="sale-icon">
+												<i class="bi bi-pie-chart text-green"></i>
+											  </div>
+											  <div class="sale-details">
+												<h5>Out of Stock Products</h5>
+												<table class="product-list-table">
+													<tr>
+													  <th>Product Name</th>
+													  <th>Count in Stock</th>
+													</tr>
+													<tbody id="outOfStockTable">
+													  <tr>
+														<td>Loading...</td>
+														<td>Loading...</td>
+													  </tr>
+													</tbody>
+												  </table>
+											  </div>
+											</div>
+											<!-- Add more sections as needed for other product data -->
+										  </div>
+										</div>
+										
+									  </div>
+									</div>
+									  <!-- Row end -->
+									</div>
+								  </div>
+								  <div class="card">
+									<div class="card-body">
+									  <div class="card">
+										<div class="card-header d-flex flex-column">
+										 	</div>
+									  </div>
+									</div>
+								  </div>
+								  
+							  </div>
+
+							  
+							  
+							  
+							<!-- <div class="col-xxl-3 col-sm-6 col-12">
+								<div class="card">
+									<div class="card-header">
+										<div class="card-title">Logs</div>
+									</div>
+									<div class="card-body">
+										<div class="scroll300">
+											<div class="logs">
+												<div class="log-list">
+													<div class="log-dot"></div>
+													<div class="log-title">New item sold</div>
+													<div class="log-time">10:10</div>
+												</div>
+												<div class="log-list">
+													<div class="log-dot yellow"></div>
+													<div class="log-title">Notification from bank</div>
+													<div class="log-time">05:25</div>
+												</div>
+												<div class="log-list">
+													<div class="log-dot"></div>
+													<div class="log-title">Transaction success alert</div>
+													<div class="log-time">09:45</div>
+												</div>
+												<div class="log-list">
+													<div class="log-dot red"></div>
+													<div class="log-title">Your item has been updated</div>
+													<div class="log-time">06:50</div>
+												</div>
+												<div class="log-list">
+													<div class="log-dot green"></div>
+													<div class="log-title">New order</div>
+													<div class="log-time">12:30</div>
+												</div>
+												<div class="log-list">
+													<div class="log-dot yellow"></div>
+													<div class="log-title">Item bought</div>
+													<div class="log-time">04:22</div>
+												</div>
+												<div class="log-list">
+													<div class="log-dot"></div>
+													<div class="log-title">New sale: Messi Wills</div>
+													<div class="log-time">10:10</div>
+												</div>
+												<div class="log-list">
+													<div class="log-dot red"></div>
+													<div class="log-title">Order received</div>
+													<div class="log-time">12:55</div>
+												</div>
+												<div class="log-list">
+													<div class="log-dot green"></div>
+													<div class="log-title">Service information</div>
+													<div class="log-time">09:12</div>
+												</div>
+												<div class="log-list">
+													<div class="log-dot"></div>
+													<div class="log-title">Message from Wilson</div>
+													<div class="log-time">09:27</div>
+												</div>
+												<div class="log-list">
+													<div class="log-dot red"></div>
+													<div class="log-title">New item sale: Joy Root</div>
+													<div class="log-time">02:39</div>
+												</div>
+												<div class="log-list">
+													<div class="log-dot"></div>
+													<div class="log-title">Product update</div>
+													<div class="log-time">08:22</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div> -->
+							<div class="col-xxl-6 col-sm-12 col-12">
+								<div class="card">
+								  <div class="card-header">
+									<div class="card-title">Visitors</div>
+								  </div>
+								  <div class="card-body">
+									<canvas id="dailyVisitorsChart"></canvas>
+								  </div>
+								</div>
+								<div class="card-body">
+									<!-- Row start -->
+									<div class="card mb-4">
+										<header class="card-header">
+											<h4 class="card-title">Latest orders</h4>
+											<div class="row align-items-center">
+												<!-- <div class="col-md-3 col-12 me-auto mb-md-0 mb-3">
+													<div class="custom_select">
+														<select id="categorySelect" class="form-select select-nice">
+															<option selected>All Categories</option>
+															<%// Category.forEach((item)=>{  %>
+															 <option value="<%=// item._id  %>"><%=// item.name  %></option>
+																<%// }) %>
+														</select>
+													</div>
+												</div> -->
+												<!-- <div class="col-md-2 col-6">
+													<input id="dateInput" type="date" value="02.05.2022" class="form-control">
+												</div> -->
+												<!-- <div class="col-md-2 col-6">
+													<div class="custom_select">
+														<select  id="statusSelect" class="form-select select-nice">
+															<option selected>Status</option>
+															<option>All</option>
+															<option>Paid</option>
+															<option>Chargeback</option>
+															<option>Refund</option>
+														</select>
+													</div>
+												</div> -->
+											</div>
+										</header>
+										<div class="card-body">
+											<div class="table-responsive">
+												<div class="table-responsive">
+													<table class="table align-middle table-nowrap mb-0">
+														<thead class="table-light">
+															<tr>
+														
+																<th class="align-middle" scope="col">Order ID</th>
+																<th class="align-middle" scope="col">Billing Name</th>
+																<th class="align-middle" scope="col">Date</th>
+																<th class="align-middle" scope="col">Status</th>
+																<th class="align-middle" scope="col">Total</th>
+																<th class="align-middle" scope="col">Payment Status</th>
+																<th class="align-middle" scope="col">Payment Method</th>
+																<th class="align-middle" scope="col">View Details</th>
+															</tr>
+														</thead>
+														<tbody >
+															<% orders.forEach(element => { %>
+																<tr>
+																	<td><%= element.orderId  %></td>
+																	<td><%= element.user.firstName  %></td>
+																	<td><%= element.orderDate.toLocaleDateString()  %></td>
+																	<%
+																	const statusColors = {
+																		"Pending": "yellow",
+																		"Processing": "grey",
+																		"Shipped": "green",
+																		"Delivered": "blue",
+																		"Canceled": "red",
+																	};
+																	%>
+																	<td><span class="badge shade-<%= statusColors[element.status] %>"><%= element.status %></span></td>
+	
+																	
+																	<td><%= element.billTotal  %></td>
+																	<td><%= element.paymentStatus  %></td>
+																	<td><%= element.paymentMethod  %></td>
+																	<td> <a href="/admin/order-management/orderDetailedView/<%= element._id %>"><button class=" btn-success " style="height: 30px; width:30px"> <i class="fa-regular fa-eye" style="color: #ffff;height: 8px;"></i></button></a></td>
+																	
+																	
+																	</tr>
+															<% }) %>
+															
+														
+														</tbody>
+													</table>
+												</div>
+											</div> <!-- table-responsive end// -->
+										</div>
+									</div>
+									<!-- Row end -->
+								
+								</div>
+							  </div>
+							  
+							
+						</div>
+						<!-- Row end -->
+
+						<!-- Row start -->
+						<div class="row">
+							
+							<div class="col-xxl-6 col-sm-12 col-12">
+							
+							</div>
+						</div>
+						<!-- Row end -->
+
+					</div>
+				
+					<!-- Content wrapper end -->
+
+					<!-- App Footer start -->
+					<div class="app-footer">
+						<span>© Bootstrap Gallery 2023</span>
+					</div>
+					<!-- App footer end -->
+
+				</div>
+				<!-- Content wrapper scroll end -->
+
+			</div>
+			<!-- *************
+				************ Main container end *************
+			************* -->
+
+		</div>
+
+
+		
+  
+	<script>
+	  // JavaScript code to fetch and render the chart
+	  fetch('/admin/daily-data')
+		.then((response) => response.json())
+		.then((data) => {
+		  const dailyOrdersData = data.dailyOrdersData;
+  
+		  const ctx = document.getElementById('dailyOrdersRevenueChart').getContext('2d');
+  
+		  const dailyOrdersRevenueChart = new Chart(ctx, {
+			type: 'bar',
+			data: {
+			  labels: dailyOrdersData.map((entry) => entry._id), // Array of daily dates
+			  datasets: [
+				{
+				  label: 'Daily Orders',
+				  data: dailyOrdersData.map((entry) => entry.orders), // Array of daily order counts
+				  backgroundColor: 'rgba(75, 192, 192, 0.2)',
+				  borderColor: 'rgba(75, 192, 192, 1)',
+				  borderWidth: 1,
+				},
+				{
+				  label: 'Daily Revenue',
+				  data: dailyOrdersData.map((entry) => entry.revenue), // Array of daily revenue amounts
+				  backgroundColor: 'rgba(255, 99, 132, 0.2)',
+				  borderColor: 'rgba(255, 99, 132, 1)',
+				  borderWidth: 1,
+				},
+			  ],
+			},
+			options: {
+			  scales: {
+				yAxes: [
+				  {
+					ticks: {
+					  beginAtZero: true,
+					},
+				  },
+				],
+			  },
+			},
+		  });
+		  // Check if there are no orders (all values are 0) and show a message
+		  if (dailyOrdersData.every((entry) => entry.orders === 0)) {
+			const noOrdersMessage = document.createElement('p');
+			noOrdersMessage.textContent = 'No daily orders available.';
+			const chartContainer = document.getElementById('dailyOrdersRevenueChart').parentNode;
+			chartContainer.appendChild(noOrdersMessage);
+		  }
+		})
+		.catch((error) => {
+		  console.error('Error fetching daily data:', error);
+		});
+
+		fetch('/admin/user-data')
+		.then((response) => response.json())
+		.then((data) => {
+		  const currentUserDataElement = document.getElementById('currentUserData');
+		  const newUserDataElement = document.getElementById('newUserData');
+		  const userChartDataElement = document.getElementById('userChartData');
+	
+		  if (currentUserDataElement && newUserDataElement) {
+			currentUserDataElement.textContent = `Active: ${data.currentUserData}%`;
+			newUserDataElement.textContent = `Increased: ${data.newUserData}%`;
+		  }
+	
+		  // Create a bar chart
+		  if (userChartDataElement) {
+			const ctx = userChartDataElement.getContext('2d');
+			new Chart(ctx, {
+			  type: 'bar',
+			  data: {
+				labels: ['Current Customers', 'New Customers'],
+				datasets: [
+				  {
+					label: 'User Data',
+					data: [data.currentUserData, data.newUserData],
+					backgroundColor: ['#007bff', '#28a745'],
+				  },
+				],
+			  },
+			  options: {
+				scales: {
+				  y: {
+					beginAtZero: true,
+				  },
+				},
+			  },
+			});
+		  }
+		})
+		.catch((error) => {
+		  console.error('Error fetching user data:', error);
+		});
+
+
+		  // Function to fetch daily visitors data from the backend
+		  const fetchDailyVisitorsData = async () => {
+			try {
+			  const response = await fetch('/admin/daily-visitors'); // Adjust the API endpoint as needed
+			  const data = await response.json();
+			  return data.dailyVisitorsData;
+			} catch (error) {
+			  console.error('Error fetching daily visitors data:', error);
+			  return [];
+			}
+		  };
+		
+		  // Function to create the dynamic line graph
+		  const createLineGraph = async () => {
+			const dailyVisitorsData = await fetchDailyVisitorsData();
+		
+			const dates = dailyVisitorsData.map((entry) => entry._id);
+			const counts = dailyVisitorsData.map((entry) => entry.count);
+		
+			const ctx = document.getElementById('dailyVisitorsChart').getContext('2d');
+			const dailyVisitorsChart = new Chart(ctx, {
+			  type: 'line',
+			  data: {
+				labels: dates, // Array of daily dates
+				datasets: [
+				  {
+					label: 'Daily Visitors',
+					data: counts, // Array of daily visitor counts
+					borderColor: 'rgba(75, 192, 192, 1)',
+					borderWidth: 1,
+					fill: false,
+				  },
+				],
+			  },
+			  options: {
+				scales: {
+				  yAxes: [
+					{
+					  ticks: {
+						beginAtZero: true,
+					  },
+					},
+				  ],
+				},
+			  },
+			});
+		  };
+		
+		  createLineGraph(); // 
+
+
+	// Function to fetch products moving to out of stock from the backend
+  const fetchMovingToOutOfStockProducts = async () => {
+    try {
+      const response = await fetch('/admin/moving-to-out-of-stock'); // Adjust the API endpoint
+      const data = await response.json();
+      return data.movingToOutOfStockProducts;
+    } catch (error) {
+      console.error('Error fetching products moving to out of stock:', error);
+      return [];
+    }
+  };
+
+  // Function to fetch out of stock products from the backend
+  const fetchOutOfStockProducts = async () => {
+    try {
+      const response = await fetch('/admin/out-of-stock'); // Adjust the API endpoint
+      const data = await response.json();
+      return data.outOfStockProducts;
+    } catch (error) {
+      console.error('Error fetching out of stock products:', error);
+      return [];
+    }
+  };
+
+  const populateProductLists = async () => {
+	const movingToOutOfStockProducts = await fetchMovingToOutOfStockProducts();
+	const outOfStockProducts = await fetchOutOfStockProducts();
+  
+	const movingToOutOfStockTable = document.getElementById('movingToOutOfStockTable');
+	const outOfStockTable = document.getElementById('outOfStockTable');
+  
+	// Clear the tables
+	movingToOutOfStockTable.innerHTML = '';
+	outOfStockTable.innerHTML = '';
+  
+	// Function to create a table row for a product
+	const createTableRow = (name, countInStock) => {
+	  const row = document.createElement('tr');
+	  row.innerHTML = `
+		<td>${name}</td>
+		<td style="color: red;">${countInStock}</td>
+	  `;
+	  return row;
+	};
+  
+	// Populate the "Products Moving to Out of Stock" table
+	movingToOutOfStockProducts.forEach((product) => {
+	  const row = createTableRow(product.name, product.countInStock);
+	  movingToOutOfStockTable.appendChild(row);
+	});
+  
+	// Populate the "Out of Stock Products" table
+	outOfStockProducts.forEach((product) => {
+	  const row = createTableRow(product.name, product.countInStock);
+	  outOfStockTable.appendChild(row);
+	});
+  };
+  
+  // Call the function to populate the tables
+  populateProductLists();
+  
+
+
+
+const categorySelect = document.getElementById('categorySelect');
+const dateInput = document.getElementById('dateInput');
+const statusSelect = document.getElementById('statusSelect');
+const orderList = document.getElementById('orderList');
+
+categorySelect.addEventListener('change', fetchOrders);
+dateInput.addEventListener('change', fetchOrders);
+statusSelect.addEventListener('change', fetchOrders);
+
+async function fetchOrders() {
+  const selectedCategory = categorySelect.value;
+  const selectedDate = dateInput.value;
+  const selectedStatus = statusSelect.value;
+	console.log(selectedCategory,selectedDate,selectedStatus)
+  try {
+	const response = await fetch(`/api/orders-by-category?category=${selectedCategory}`);
+	if (response.ok) {
+	  const orders = await response.json();
+
+	  // Filter orders by selected date and status
+	  const filteredOrders = orders.filter((order) => {
+		const orderDate = new Date(order.orderDate);
+		const isSameDate = selectedDate ? new Date(selectedDate).toDateString() === orderDate.toDateString() : true;
+		const isStatusMatch = selectedStatus !== 'Status' ? order.paymentStatus === selectedStatus : true;
+
+		return isSameDate && isStatusMatch;
+	  });
+
+	  // Render the filtered orders in the table
+	  renderOrders(filteredOrders);
+	} else {
+	  console.error('Error fetching orders:', response.statusText);
+	}
+  } catch (error) {
+	console.error('Error fetching orders:', error);
+  }
+}
+
+function renderOrders(orders) {
+	orderList.innerHTML = '';
+	orders.forEach((order) => {
+	  // Create a table row for each order
+	  const row = document.createElement('tr');
+  
+	  // Create table cells and fill them with order details
+	  const orderIdCell = document.createElement('td');
+	  orderIdCell.textContent = `#${order._id}`; // Use the _id or your order identifier
+	  row.appendChild(orderIdCell);
+  
+	  const billingNameCell = document.createElement('td');
+	  billingNameCell.textContent = order.user.name; // Assuming user contains the name
+	  row.appendChild(billingNameCell);
+  
+	  const dateCell = document.createElement('td');
+	  dateCell.textContent = new Date(order.orderDate).toLocaleDateString(); // Format the date as needed
+	  row.appendChild(dateCell);
+  
+	  const totalCell = document.createElement('td');
+	  totalCell.textContent = `$${order.billTotal.toFixed(2)}`; // Format the total as needed
+	  row.appendChild(totalCell);
+  
+	  const paymentStatusCell = document.createElement('td');
+	  paymentStatusCell.textContent = order.paymentStatus;
+	  row.appendChild(paymentStatusCell);
+  
+	  const paymentMethodCell = document.createElement('td');
+	  paymentMethodCell.textContent = order.paymentMethod;
+	  row.appendChild(paymentMethodCell);
+  
+	  const viewDetailsCell = document.createElement('td');
+	  // Create a link to view order details. Adjust this based on your requirements.
+	  const viewDetailsLink = document.createElement('a');
+	  viewDetailsLink.textContent = 'View Details';
+	  viewDetailsLink.href = `/order/${order._id}`; // Use the _id or your order identifier
+	  viewDetailsCell.appendChild(viewDetailsLink);
+  
+	  row.appendChild(viewDetailsCell);
+  
+	  // Append the row to the table
+	  orderList.appendChild(row);
+	});
+  }
+  
+// Initial fetch when the page loads
+fetchOrders();
+
+// When the "Daily Report" button is clicked
+document.getElementById('dailyReportButton').addEventListener('click', function () {
+	// Make an AJAX request to get the daily sales report data
+	$('#salesReportModal').modal('show');
+	// Replace this with the actual endpoint to fetch the report data
+	fetch('/api/sales-report/daily')
+	  .then(response => response.json())
+	  .then(data => {
+		// Populate the modal with the report data
+		const modalBody = document.querySelector('#salesReportModal .modal-body');
+		modalBody.innerHTML = data; // You may need to format the data appropriately
+	  });
+  
+	// Show the modal
+	
+  });
+  
+  // Similarly, you can add event listeners for the "Weekly Report" and "Yearly Report" buttons.
+  
+ 
+</script>
+    <%- include('partials/Adminfooter') %>
+		

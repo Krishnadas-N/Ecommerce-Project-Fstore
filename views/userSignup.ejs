@@ -1,0 +1,157 @@
+<%- include('userSidePartials/UserHeader') %>
+<style>
+    /* styles.css */
+
+/* Spinner overlay styles */
+.spinner-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+/* Spinner styles */
+.spinner {
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid #3498db;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+</style>
+<%- include('userSidePartials/UserMobileHeader') %>
+    
+    <main class="main">
+        <div class="page-header breadcrumb-wrap">
+            <div class="container">
+                <div class="breadcrumb">
+                    <a href="index.html" rel="nofollow">Home</a>
+                    <span></span>Register
+                </div>
+            </div>
+        </div>
+        <section class="pt-50  pb-150">
+            <div class="container ">
+       
+                <div class="row">
+                    <div class="col-lg-10  m-auto ">
+                        <div class="row">
+
+                            
+
+                            <div class="col-lg-6 m-auto">
+
+                                <div id="error-toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="true" style="display: none;">
+                                    <div class="toast-body">
+                                      <span id="error-message" class="text-danger"></span>
+                                    </div>
+                                  </div>
+                                  
+                                <div class="login_wrap widget-taber-content p-30 background-white border-radius-5">
+                                    <div class="padding_eight_all bg-white">
+                                        <div class="heading_s1">
+                                            <h3 class="mb-30">Create an Account</h3>
+                                        </div>
+                                        <p class="mb-50 font-sm">
+                                            Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our privacy policy
+                                        </p>
+
+                                      
+                                        <form  onsubmit="validateForm(event)">
+                                            <div class="form-group">
+                                                <input type="text" required="" id="firstName" name="firstName" placeholder="FirstName">
+                                                <span class="text-danger" id="firstNameMessage"></span>
+                                            </div>
+                                            <div class="form-group">
+                                            <input type="text" placeholder="LastName" id="lastName" name="lastName" required>
+                                            <span class="text-danger" id="lastNameMessage"></span>
+                                        </div>
+                                            <div class="form-group">
+                                                <input type="email" required="" id="email" name="email"placeholder="Email">
+                                                <span class="text-danger" id="emailMessage"></span>
+                                            </div>
+                                            
+                                            
+                                            <div class="chek-form">
+                                                <div class="">
+                                                <label class="form-check-label">Gender</label>
+                                            </div>
+                                            <div class="mb-2">
+                                                    <input class="form-check-input me-2"  type="radio" name="gender" id="Male" value="Male" required>
+                                                    <label class="form-check-label" for="Male">Male</label>
+                                                    <input class="form-check-input me-2" type="radio" name="gender" id="Female" value="Female" required>
+                                                    <label class="form-check-label" for="Female">Female</label>
+                                                    <input class="form-check-input" type="radio" name="gender" id="Others" value="Others" required>
+                                                    <label class="form-check-label" for="Others">Others</label>
+                                            </div>
+                                            </div>
+                                            
+
+                                            <div class="form-group">
+                                                <input type="number" placeholder="Mobile" id="mobile" name="mobile" maxlength="10" pattern="[0-9]{10}" required>
+                                                <span class="text-danger" id="mobileMessage"></span>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <input required="" type="password" id="password" name="password" placeholder="password">
+                                                <span class="text-danger" id="passwordMessage"></span>
+                                            </div>
+                                            <div class="form-group">
+                                                <input required="" type="password" id="confirmpassword"  placeholder="Confirm password">
+                                                <span class="text-danger" id="confirmpasswordMessage"></span>
+                                            </div>
+                                            <div class="login_footer form-group">
+                                                <!-- <div class="chek-form">
+                                                    <div class="custome-checkbox">
+                                                        <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox12" value="">
+                                                        <label class="form-check-label" for="exampleCheckbox12"><span>I agree to terms &amp; Policy.</span></label>
+                                                    </div>
+                                                </div> -->
+                                                <!-- <a href="page-privacy-policy.html"><i class="fi-rs-book-alt mr-5 text-muted"></i>Lean more</a> -->
+                                            </div>
+                                            <div class="form-group">
+                                                <button type="submit" class="btn btn-fill-out btn-block hover-up" >Submit &amp; Register</button>
+                                            </div>
+                                        </form>
+                                        <!-- <div class="divider-text-center mt-15 mb-15">
+                                            <span> or</span>
+                                        </div> -->
+                                        <!-- <ul class="btn-login list_none text-center mb-15">
+                                            <li><a href="#" class="btn btn-facebook hover-up mb-lg-0 mb-sm-4">Login With Facebook</a></li>
+                                            <li><a href="#" class="btn btn-google hover-up">Login With Google</a></li>
+                                        </ul> -->
+                                        <div class="text-muted text-center">Already have an account? <a href="login">Sign in now</a></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+
+   <!-- Add the spinner overlay -->
+   <div id="spinner-overlay" class="spinner-overlay">
+    <div class="spinner"></div>
+</div>
+
+<script src="/javascripts/USER/userSignup.js"></script>
+   
+    <%- include('userSidePartials/UserFooter') %>

@@ -1,0 +1,122 @@
+<%- include('userSidePartials/UserHeader') %>
+<style>
+  /* styles.css */
+
+/* Spinner overlay styles */
+.spinner-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* Spinner styles */
+.spinner {
+  border: 6px solid #f3f3f3;
+  border-top: 6px solid #3498db;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+</style>
+<%- include('userSidePartials/UserMobileHeader') %>
+    
+    
+  
+    <section class="wrapper " style="margin-top: 50px; margin-bottom: 50px;">
+		<div class="container">
+			<div class="col-sm-8 offset-sm-2 col-lg-6 offset-lg-3 col-xl-6 offset-xl-3 text-center">
+				
+				<form id="submitOTPButton" class="rounded bg-white shadow p-5">
+					<h3 class="text-dark fw-bolder fs-4 mb-2">Two Step Verification</h3>
+
+					<div class="fw-normal text-muted mb-4">
+						Enter the verification code we sent to
+					</div>  
+
+                    <div class="d-flex align-items-center justify-content-center fw-bold mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-asterisk" viewBox="0 0 16 16">
+                            <path d="M8 0a1 1 0 0 1 1 1v5.268l4.562-2.634a1 1 0 1 1 1 1.732L10 8l4.562 2.634a1 1 0 1 1-1 1.732L9 9.732V15a1 1 0 1 1-2 0V9.732l-4.562 2.634a1 1 0 1 1-1-1.732L6 8 1.438 5.366a1 1 0 0 1 1-1.732L7 6.268V1a1 1 0 0 1 1-1z"/>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-asterisk" viewBox="0 0 16 16">
+                            <path d="M8 0a1 1 0 0 1 1 1v5.268l4.562-2.634a1 1 0 1 1 1 1.732L10 8l4.562 2.634a1 1 0 1 1-1 1.732L9 9.732V15a1 1 0 1 1-2 0V9.732l-4.562 2.634a1 1 0 1 1-1-1.732L6 8 1.438 5.366a1 1 0 0 1 1-1.732L7 6.268V1a1 1 0 0 1 1-1z"/>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-asterisk" viewBox="0 0 16 16">
+                            <path d="M8 0a1 1 0 0 1 1 1v5.268l4.562-2.634a1 1 0 1 1 1 1.732L10 8l4.562 2.634a1 1 0 1 1-1 1.732L9 9.732V15a1 1 0 1 1-2 0V9.732l-4.562 2.634a1 1 0 1 1-1-1.732L6 8 1.438 5.366a1 1 0 0 1 1-1.732L7 6.268V1a1 1 0 0 1 1-1z"/>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-asterisk" viewBox="0 0 16 16">
+                            <path d="M8 0a1 1 0 0 1 1 1v5.268l4.562-2.634a1 1 0 1 1 1 1.732L10 8l4.562 2.634a1 1 0 1 1-1 1.732L9 9.732V15a1 1 0 1 1-2 0V9.732l-4.562 2.634a1 1 0 1 1-1-1.732L6 8 1.438 5.366a1 1 0 0 1 1-1.732L7 6.268V1a1 1 0 0 1 1-1z"/>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-asterisk" viewBox="0 0 16 16">
+                            <path d="M8 0a1 1 0 0 1 1 1v5.268l4.562-2.634a1 1 0 1 1 1 1.732L10 8l4.562 2.634a1 1 0 1 1-1 1.732L9 9.732V15a1 1 0 1 1-2 0V9.732l-4.562 2.634a1 1 0 1 1-1-1.732L6 8 1.438 5.366a1 1 0 0 1 1-1.732L7 6.268V1a1 1 0 0 1 1-1z"/>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-asterisk" viewBox="0 0 16 16">
+                            <path d="M8 0a1 1 0 0 1 1 1v5.268l4.562-2.634a1 1 0 1 1 1 1.732L10 8l4.562 2.634a1 1 0 1 1-1 1.732L9 9.732V15a1 1 0 1 1-2 0V9.732l-4.562 2.634a1 1 0 1 1-1-1.732L6 8 1.438 5.366a1 1 0 0 1 1-1.732L7 6.268V1a1 1 0 0 1 1-1z"/>
+                        </svg>
+                      
+                    </div>
+
+					<div class="otp_input text-start mb-2">
+                        <label for="digit">Type your 6 digit security code</label>
+						<div class="d-flex align-items-center justify-content-between mt-2">
+                            <input type="text" class="form-control" placeholder="" maxlength="1">
+                            <input type="text" class="form-control" placeholder="" maxlength="1">
+                            <input type="text" class="form-control" placeholder="" maxlength="1">
+                            <input type="text" class="form-control" placeholder="" maxlength="1">
+                            <input type="text" class="form-control" placeholder="" maxlength="1">
+                            <input type="text" class="form-control" placeholder="" maxlength="1">
+                        </div> 
+                        <span id="otperror" class="text-danger"></span>
+					</div>  
+
+					<button type="submit" class="btn btn-primary submit_btn my-4">Submit</button> 
+
+                    <div class="fw-normal text-muted mb-2">
+                        <span id="timer" class="text-dark"></span>
+                        Didn't get the code?
+                        <!-- Add a container for the "Resend" link and spinner -->
+                      <div id="resendContainer">
+                        <a href="#" id="resendLink" class="text-primary fw-bold text-decoration-none" style="display: none;">Resend</a>
+                        <div id="resendSpinner" class="spinner-border text-primary" role="status" style="display: none;">
+                          <span class="visually-hidden">Loading...</span>
+                        </div>
+                      </div>
+
+                      </div>
+				</form>
+			</div>
+		</div>
+        
+    </div>
+    <div id="toast"  style="display: none;  position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    z-index: 1000;"></div>
+	</section>
+     <!-- Add the spinner overlay -->
+     <div id="spinner-overlay" class="spinner-overlay">
+      <div class="spinner"></div>
+  </div>
+  </body>
+
+  <script src="/javascripts/USER/userOtpSigin.js"></script>
+  
+  <%- include('userSidePartials/UserFooter') %>

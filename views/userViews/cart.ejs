@@ -1,0 +1,278 @@
+
+
+<%- include('userSidePartials/UserHeader') %>
+<style>
+    .coupon-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: 1px solid #ddd;
+        padding: 10px;
+        margin-bottom: 10px;
+        margin-right: 10px;
+        margin-top: 10px;
+    }
+
+    .coupon-details {
+        flex-grow: 1;
+    }
+
+    .apply-btn {
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 14px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+    a.btn.disabled {
+        pointer-events: none; /* Prevents clickable events */
+        color: #ccc; /* Makes the text color light grey */
+    }
+    .disabled-link {
+        pointer-events: none; /* Disable pointer events to prevent interactions */
+        color: #999; /* Change the color to a muted or grayed-out style */
+        text-decoration: none; /* Remove underlines or other text decorations */
+    }
+    a.disabled {
+        pointer-events: none;
+        cursor: default;
+        color: #ccc;
+    }
+    .alert {
+        padding: 10px;
+        background-color: #f44336;
+        color: white;
+        text-align: center;
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 20vw;
+        z-index: 1000;
+    }
+    #stockAlert {
+        position: fixed;
+        top: 20%;  /* Center the alert vertically */
+        left: 50%; /* Center the alert horizontally */
+        transform: translate(-50%, -50%); /* Center the alert perfectly */
+        padding: 10px;
+        background-color: #f44336;
+        color: white;
+        text-align: center;
+    }
+    
+</style>
+<%- include('userSidePartials/UserMobileHeader') %>
+
+
+<div id="stockAlert" class="alert alert-danger" style="display: none;">
+    Stock is exceeded. You cannot increase the quantity.
+</div>
+
+
+
+<main class="main">
+    <div class="page-header breadcrumb-wrap">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="index.html" rel="nofollow">Home</a>
+                <span></span> Shop
+                <span></span> Your Cart
+            </div>
+        </div>
+    </div>
+    <section class="mt-0 mb-50">
+        <div class="container p-5" id="alert-box">
+          <!-- ALert boxx -->
+        </div>
+        <%   if (cart && cart.items.length>0) { %>
+        <div class="container">
+            <div class="row">
+               
+                <div class="col-12">
+                    <div class="table-responsive">
+                        <table class="table shopping-summery text-center clean">
+                            <thead>
+                                <tr class="main-heading">
+                                    <th scope="col">Items to buy</th>
+                                    <th scope="col">Image</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Quantity</th>
+                                    <th scope="col">Subtotal</th>
+                                    <th scope="col">Remove</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                             
+                                
+                                <%   for (let i = 0; i < cart.items.length; i++) { %>
+                                <tr>
+                                    <td class="checkbox" data-title="Select">
+                                        <input type="checkbox" class="product-checkbox h-50" data-id="<%= cart.items[i].productId._id %>"
+                                            <% if (cart.items[i].productId.countInStock === 0) { %>disabled<% } %>
+                                            <% if (cart.items[i].productId.countInStock === 0) { %>checked="checked"<% } %>
+                                        >
+                                    </td>
+                                    
+                                    
+                                    
+                                    <td class="image product-thumbnail"><img src="/<%= cart.items[i].image %>" alt="#"></td>
+                                    <td class="product-des product-name">
+                                        <h5 class="product-name"><a href="/product-detail/<%= cart.items[i].productId._id %>"><%= cart.items[i].name %></a></h5>
+                                        
+                                    </td>
+                                    <td class="price" data-title="Price"><span>₹ <%= cart.items[i].productPrice %> </span></td>
+                                  
+                                    <td class="text-center" data-title="Stock">
+                                    
+                                       
+                                        <div class="detail-qty border radius  m-auto">
+                                            <% if (cart.items[i].productId.countInStock > 0) { %>
+                                            <a href="#" class="qty-down" data-id="<%= cart.items[i].productId._id  %>" data-stock="<%= cart.items[i].productId.countInStock %>"><i class="fi-rs-angle-small-down"></i></a>
+                                            <span class="qty-val" id="qty-<%= cart.items[i].productId._id  %>"><%= cart.items[i].quantity %></span>
+                                            <a href="#" class="qty-up" data-id="<%= cart.items[i].productId._id  %>"  data-stock="<%= cart.items[i].productId.countInStock %>"><i class="fi-rs-angle-small-up"></i></a>
+                                            <% } else { %>
+                                                <span class="out-of-stock-message" style="font-size: 6px; background-color: #f44336; color: #fff; padding: 2px; border-radius: 4px;">Out of Stock</span>
+
+                                            <% } %>
+                                        </div>
+                                         
+                                    </td>
+                                    
+                                    <td class="text-right" data-title="Cart">
+                                        <span>INR <%= cart.items[i].price %> </span>
+                                    </td>
+                                    <td class="action" data-title="Remove"><button type="button" onclick="removeItem('<%= cart.items[i].productId._id %>')" class="text-muted"><i class="fi-rs-trash"></i></button></td>
+                                </tr>
+                              <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="cart-action text-end">
+                        <!-- <a class="btn  mr-10 mb-sm-15"><i class="fi-rs-shuffle mr-10"></i>Update Cart</a> -->
+                        <a class="btn " href="/shop"><i class="fi-rs-shopping-bag mr-10"></i>Continue Shopping</a>
+                    </div>
+                    <div class="divider center_icon mt-50 mb-50"><i class="fi-rs-fingerprint"></i></div>
+                    <div class="row mb-50">
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12">
+                            <div class="card mb-3">
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <form>
+                                            <div class="form-group">
+                                                <label>Have coupon?</label>
+                                                <span id="errorCoupon" class="text-danger display:none" ></span>
+                                                <div class="input-group">
+                                                    <input id="couponCode" type="text" class="form-control" placeholder="Enter coupon code">
+                                                    <span class="input-group-append">
+                                                        <button type="button" class="btn btn-primary btn-apply coupon" onclick="applyCoupon()">Apply</button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <!-- Add a section to display applicable coupons -->
+                                    <div class="applicable-coupons ms-4">
+                                        <h2>Applicable Coupons</h2>
+                                        <div id="couponList"></div>
+                                    </div>
+                                  
+                              
+                            </div>
+                        </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12">
+                            <div class="border p-md-4 p-30 border-radius cart-totals">
+                                <div class="heading_s1 mb-3">
+                                    <h4>Cart Totals</h4>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <tbody>
+                                            <tr>
+                                                <td class="cart_total_label">Cart Subtotal</td>
+                                                <td class="cart_total_amount"><span class="font-lg fw-900  text-brand" id="cartTotal">₹ <%= cart.billTotal %></span></td>
+                                            </tr>
+                                            <tr> 
+                                                <td class="cart_total_label">Discounted Price</td>
+                                                <td class="cart_total_amount"><span id="discountedPrice" class="font-lg fw-900 text-brand">₹ </span></td>
+                                            
+                                            </tr>
+
+                                            <tr>
+                                                <td class="cart_total_label">Shipping</td>
+                                                <td class="cart_total_amount"> <i class="ti-gift mr-5"></i> Free Shipping</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="cart_total_label">Total</td>
+                                                <td class="cart_total_amount"><strong><span class="font-xl fw-900 text-brand " id="totalPrice" data-billTotal="<%= cart.billTotal %>">₹ <%= cart.billTotal %></span></strong></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <a href="/cart/checkout" class="btn <%= cart.billTotal === 0 ? 'disabled' : '' %>">
+                                    <i class="fi-rs-box-alt mr-10"></i> Proceed To Checkout
+                                </a>
+                                
+                                     </div>
+                        </div>
+                    </div>
+                </div>
+               
+            </div>
+        </div>
+        <%  } else{%>
+            <div class="container">
+                <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                    <h5>Cart</h5>
+                    </div>
+                    <div class="card-body cart">
+                            <div class="col-sm-12 empty-cart-cls text-center">
+                                <img src="https://i.imgur.com/dCdflKN.png" width="130" height="130" class="img-fluid mb-4 mr-3">
+                                <h3><strong>Your Cart is Empty</strong></h3>
+                                <h4>Add something to make me happy :</h4>
+                                <a href="/shop" class="btn btn-primary cart-btn-transform m-3" data-abc="true">continue shopping</a>
+                                
+                            
+                            </div>
+                    </div>
+            </div>
+            </div>
+            </div>
+            <% } %>
+    </section>
+</main>
+
+
+ <!-- Preloader Start -->
+ <!-- <div id="preloader-active">
+    <div class="preloader d-flex align-items-center justify-content-center">
+        <div class="preloader-inner position-relative">
+            <div class="text-center">
+                <h5 class="mb-5">Now Loading</h5>
+                <div class="loader">
+                    <div class="bar bar1"></div>
+                    <div class="bar bar2"></div>
+                    <div class="bar bar3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<script src="/javascripts//USER/userCart.js"></script>
+<%- include('userSidePartials/UserFooter') %>
+
+
+

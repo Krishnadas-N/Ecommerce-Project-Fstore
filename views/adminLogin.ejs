@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+<style>
+    body {
+        background: #222D32;
+        font-family: 'Roboto', sans-serif;
+    }
+    
+    .login-box {
+        margin-top: 75px;
+        height: auto;
+        background: #1A2226;
+        text-align: center;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    }
+    
+    .login-key {
+        height: 100px;
+        font-size: 80px;
+        line-height: 100px;
+        background: -webkit-linear-gradient(#27EF9F, #0DB8DE);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    
+    .login-title {
+        margin-top: 15px;
+        text-align: center;
+        font-size: 30px;
+        letter-spacing: 2px;
+        margin-top: 15px;
+        font-weight: bold;
+        color: #ECF0F5;
+    }
+    
+    .login-form {
+        margin-top: 25px;
+        text-align: left;
+    }
+    
+    input[type=text] {
+        background-color: #1A2226;
+        border: none;
+        border-bottom: 2px solid #0DB8DE;
+        border-top: 0px;
+        border-radius: 0px;
+        font-weight: bold;
+        outline: 0;
+        margin-bottom: 20px;
+        padding-left: 0px;
+        color: #ECF0F5;
+    }
+    
+    input[type=password] {
+        background-color: #1A2226;
+        border: none;
+        border-bottom: 2px solid #0DB8DE;
+        border-top: 0px;
+        border-radius: 0px;
+        font-weight: bold;
+        outline: 0;
+        padding-left: 0px;
+        margin-bottom: 20px;
+        color: #ECF0F5;
+    }
+    
+    .form-group {
+        margin-bottom: 40px;
+        outline: 0px;
+    }
+    
+    .form-control:focus {
+        border-color: inherit;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+        border-bottom: 2px solid #0DB8DE;
+        outline: 0;
+        background-color: #1A2226;
+        color: #ECF0F5;
+    }
+    
+    input:focus {
+        outline: none;
+        box-shadow: 0 0 0;
+    }
+    
+    label {
+        margin-bottom: 0px;
+    }
+    
+    .form-control-label {
+        font-size: 10px;
+        color: #6C6C6C;
+        font-weight: bold;
+        letter-spacing: 1px;
+    }
+    
+    .btn-outline-primary {
+        border-color: #0DB8DE;
+        color: #0DB8DE;
+        border-radius: 0px;
+        font-weight: bold;
+        letter-spacing: 1px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    }
+    
+    .btn-outline-primary:hover {
+        background-color: #0DB8DE;
+        right: 0px;
+    }
+    
+    .login-btm {
+        float: left;
+    }
+    
+    .login-button {
+        padding-right: 0px;
+        text-align: right;
+        margin-bottom: 25px;
+    }
+    
+    .login-text {
+        text-align: left;
+        padding-left: 0px;
+        color: #A2A4A4;
+    }
+    
+    .loginbttm {
+        padding: 0px;
+    }
+    #ErrorMessage {
+        color: white; /* Set the text color to white or any other contrasting color */
+        background-color: red; /* Set the background color for the error message */
+        padding: 10px; /* Add some padding for better visibility */
+        border-radius: 5px; /* Optional: Add rounded corners for a nicer look */
+      }
+      
+</style>
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+</head>
+
+    
+    <body style="background-color: #ffff; overflow-x: hidden;">
+   
+        <div class="container mx-auto">
+            <div class="row mx-auto">
+                <div class="col-lg-3 col-md-2"></div>
+                <div class="col-lg-6 col-md-8 login-box">
+                    <div class="col-lg-12 login-key">
+                        <i class="fa fa-key" aria-hidden="true"></i>
+                        
+                    </div>
+                   
+                     
+                       
+                   <h2 class="text-primary"> ADMIN PANEL</h2>
+    
+                    <div class="col-lg-12 login-form">
+                        <div class="col-lg-12 login-form">
+                            <form action="/admin/login" method="post" id="loginFOrm" name="Login_Form">
+                                <div class="form-group">
+                                 
+                                    <label class="form-control-label">Email</label>
+                                    <input type="email"  id="Email" class="form-control form-control-lg" name="email" placeholder="Email Address" required autofocus/>
+                                    <span id="emailMessage"  class="text-bg-light text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-control-label">PASSWORD</label>
+                                 
+                                    <input type="password" id="Password" class="form-control form-control-lg" name="password" placeholder="Password" required />
+                                    <span id="passwordMessage" class="text-bg-light text-danger"></span>
+
+                         
+                                </div>
+    
+                                <div class="col-lg-12 loginbttm">
+                                    <div class="col-lg-12 login-btm login-text">
+                                        <% if(errorMessage!=''){ %>
+                                         
+                                            <h6 id="ErrorMessage" class="text-bg-light text-danger " style="display: none;"><%= errorMessage  %></h6>
+                                       
+                                            <% } %>
+                                    </div>
+                                    <div class="col-lg-12 login-btm login-button text-center">
+                                        <button type="submit" class="btn btn-outline-primary">LOGIN</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+    
+    
+    
+    <script>
+
+        const errorMessage = '<%= errorMessage  %>'
+        if(errorMessage!=''){
+            document.getElementById('ErrorMessage').style.display='block'
+
+            setTimeout(()=>{
+                document.getElementById('ErrorMessage').style.display='none';
+            },5000)
+            
+        }
+           
+        const loginForm = document.getElementById('loginFOrm');
+loginForm.addEventListener('submit', (e) => {
+
+  // Get all input fields
+  const emailInput = document.getElementById('Email');
+  const passwordInput = document.getElementById('Password');
+
+  // Get all validation messages
+  const emailMessage = document.getElementById('emailMessage');
+  const passwordMessage = document.getElementById('passwordMessage');
+
+  // Clear all validation messages
+  emailMessage.textContent = '';
+  passwordMessage.textContent = '';
+
+  // Validate the email field
+  if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(emailInput.value)) {
+    e.preventDefault()
+    emailMessage.textContent = 'Please enter a valid email address.';
+    return false;
+  }
+
+  // Validate the password field
+  if (passwordInput.value.length < 6) {
+    e.preventDefault()
+    passwordMessage.textContent = 'Please enter a password of at least 6 characters.';
+    return false;
+  }
+
+  // If all fields are valid, return true
+  return true;
+});
+
+    </script>
+    <!-- Bootstrap JS (place it at the end for faster page loading) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+</html>

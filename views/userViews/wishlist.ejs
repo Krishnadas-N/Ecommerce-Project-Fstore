@@ -1,0 +1,326 @@
+
+
+<%- include('userSidePartials/UserHeader') %>
+<style>
+     /* CSS for the success message popup */
+  .success-box {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #000; /* Black background color */
+    color: #fff; /* White text color */
+    padding: 10px 20px;
+    border-radius: 4px;
+    z-index: 999;
+    transition: top 0.5s ease-in-out;
+  }
+
+  /* Styling for the success icon */
+ 
+
+  /* Animation to slide the message in from the top */
+  .slide-in {
+    top: 50px;
+  }
+    .product-grid{
+        font-family: 'Poppins', sans-serif;
+        text-align: center;
+    }
+    .product-grid .product-image{
+        overflow: hidden;
+        position: relative;
+        z-index: 1;
+    }
+    .product-grid .product-image a.image{display: block; }
+    .product-grid .product-image img{
+        width: 100%;
+        height: 300px;
+    }
+    .product-grid .product-discount-label{
+        color: #fff;
+        background: #A5BA8D;
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 25px;
+        padding: 0 20px;
+        position: absolute;
+        top: 10px;
+        left: 0;
+    }
+    .product-grid .product-links{
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        position: absolute;
+        top: 10px;
+        right: -50px;
+        transition: all .5s ease 0s;
+    }
+    .product-grid:hover .product-links{ right: 10px; }
+    .product-grid .product-links li a{
+        color: #333;
+        background: transparent;
+        font-size: 17px;
+        line-height: 38px;
+        width: 38px;
+        height: 38px;
+        border: 1px solid #333;
+        border-bottom: none;
+        display: block;
+        transition: all 0.3s;
+    }
+    .product-grid .product-links li:last-child a{ border-bottom: 1px solid #333; }
+    .product-grid .product-links li a:hover{
+        color: #fff;
+        background: #333;
+    }
+    .product-grid .add-to-cart{
+        background: #19B8A2;
+        color: #fff;
+        font-size: 16px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        width: 100%;
+        padding: 10px 26px;
+        position: absolute;
+        left: 0;
+        bottom: -60px;
+        transition: all 0.3s ease 0s;
+    }
+    .product-grid:hover .add-to-cart{ bottom: 0; }
+    .product-grid .add-to-cart:hover{ text-shadow: 4px 4px rgba(0,0,0,0.2); }
+    .product-grid .product-content{
+        background: #fff;
+        padding: 15px;
+        box-shadow: 0 0 0 5px rgba(0,0,0,0.1) inset;
+    }
+    .product-grid .title{
+        font-size: 16px;
+        font-weight: 600;
+        text-transform: capitalize;
+        margin: 0 0 7px;
+    }
+    .product-grid .title a{
+        color: #777;
+        transition: all 0.3s ease 0s;
+    }
+    .product-grid .title a:hover{ color: #a5ba8d; }
+    .product-grid .price{
+        color: #0d0d0d;
+        font-size: 14px;
+        font-weight: 600;
+    }
+    .product-grid .price span{
+        color: #888;
+        font-size: 13px;
+        font-weight: 400;
+        text-decoration: line-through;
+    }
+    @media screen and (max-width: 990px){
+        .product-grid{ margin-bottom: 30px; }
+    }
+</style>
+<%- include('userSidePartials/UserMobileHeader') %>
+
+
+
+
+<div class="container mx-auto mt-4 mb-5" style="margin-bottom: 250px;">
+<div class="row">
+    <% if (Products && Products.length>0) { %>
+   <% Products.forEach(element => { %>
+    <div class="col-md-3 col-lg-3 col-sm-6" style="margin-top: 50px;">
+        <div class="product-grid" id="product_<%= element._id %>">
+            <div class="product-image">
+                <a href="#" class="image">
+                    <img src="/<%= element.image %>">
+                </a>
+                <span class="product-discount-label">-23%</span>
+                <ul class="product-links">
+                    <li><a href="#" class="remove-product"  data-product-id="<%= element.productId  %>">  <i class="fas fa-times"></i></a></li>
+                   
+                </ul>
+                <a href="" class="add-to-cart" data-product-id="<%= element.productId %>"><i class="fas fa-shopping-cart"></i>   Move to Cart</a>
+            </div>
+            <div class="product-content" style="height: 100px;">
+                <h3 class="title"><a href="#"><%= element.name %></a></h3>
+                <div class="price">INR <%= element.price %> <span>$68.88</span></div>
+            </div>
+        </div>
+    </div>
+   <% }) %>
+    <% }else { %>
+        <div class="container">
+            <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                
+                </div>
+                <div class="card-body cart">
+                        <div class="col-sm-12 empty-cart-cls text-center">
+                            <img src="/images/shopping-cart.png" width="130" height="130" class="img-fluid mb-4 mr-3">
+                            <h3><strong>Your Wishlist is Empty</strong></h3>
+                            <h6>Add items that you like to your wishlist. Review them anytime and easily move them to the Cart </h6>
+                            <a href="/shop" class="btn btn-primary cart-btn-transform m-3" data-abc="true">continue shopping</a>
+                            
+                        
+                        </div>
+                </div>
+        </div>
+        </div>
+        </div>
+        </div>
+        <% } %>
+</div>
+<div class="row mt-5 mb-5">
+  <div class="pagination-area mt-15 mb-5 mb-sm-5 mb-lg-0">
+    <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-start">
+        <!-- Previous button -->
+        <% if (paginationInfo.currentPage > 1) { %>
+          <li class="page-item">
+            <a class="page-link" href="?page=<%= paginationInfo.currentPage - 1 %>">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+        <% } %>
+
+    <!-- Dynamic display of page buttons -->
+          <% const maxVisiblePages = 5; %>
+          <% const startPage = Math.max(1, paginationInfo.currentPage - Math.floor(maxVisiblePages / 2)); %>
+          <% const endPage = Math.min(paginationInfo.totalPages, startPage + maxVisiblePages - 1); %>
+          <% for (let page = startPage; page <= endPage; page++) { %>
+            <% const isCurrentPage = page === paginationInfo.currentPage; %>
+
+            <li class="page-item <%= isCurrentPage ? 'active' : '' %>">
+              <a class="page-link" href="?page=<%= page %>&perPage=<%= paginationInfo.perPage %>"><%= page %></a>
+            </li>
+          <% } %>
+
+
+        <!-- Next button -->
+        <% if (paginationInfo.currentPage < paginationInfo.totalPages) { %>
+          <li class="page-item">
+            <a class="page-link" href="?page=<%= paginationInfo.currentPage + 1 %>&perPage=<%= paginationInfo.perPage %>">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+        <% } %>
+      </ul>
+    </nav>
+  </div>
+</div>
+
+</div>
+
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById('NewsLetter').style.display = 'none';
+        var line = document.createElement('hr');
+    
+        // Get a reference to the footer element
+        var footer = document.getElementById('footer');
+        
+        // Insert the line element before the footer
+        footer.parentNode.insertBefore(line, footer);
+        function displaySuccessMessage(message) {
+            // Create a small rectangle box with a success icon and the message
+            const successBox = document.createElement('div');
+            successBox.className = 'success-box';
+            successBox.innerHTML = `<i class="fa-solid fa-circle-check" style="color: #10b123; margin-right:5px"></i> ${message}`;
+      
+            // Append the box to the document's body
+            document.body.appendChild(successBox);
+      
+            // Remove the box after a certain duration (e.g., 5 seconds)
+            setTimeout(() => {
+              document.body.removeChild(successBox);
+            }, 5000);
+          }
+  
+        
+            const removeButtons = document.querySelectorAll('.remove-product');
+            
+            removeButtons.forEach((button) => {
+              button.addEventListener('click', function (event) {
+                event.preventDefault();
+        
+                const productId = button.getAttribute('data-product-id');
+               
+                // Make an AJAX request to remove the product from the wishlist
+                fetch(`/wishlist/remove/${productId}`, {
+                  method: 'POST',
+                })
+                  .then((response) => response.json())
+                  .then((data) => {
+                    if (data.message === 'Product removed from wishlist successfully') {
+                      // Display a success message
+                      displaySuccessMessage('Product removed from wishlist successfully');
+                      // Optionally, remove the product from the HTML as well
+                      let productElement = document.getElementById('product_' + productId);
+                      if (productElement) {
+                        console.log(productElement)
+                        productElement.style.display = "none";
+                      }
+                    } else {
+                      // Handle any other error or message here
+                      // You can display an error message in a similar way
+                    }
+                  })
+                  .catch((error) => {
+                    console.error(error);
+                    // Handle the error here
+                  });
+              });
+            });
+
+
+            const addToCartButtons = document.querySelectorAll('.add-to-cart');
+
+            addToCartButtons.forEach((button) => {
+              button.addEventListener('click', function (event) {
+                event.preventDefault();
+        
+                const productId = button.getAttribute('data-product-id');
+        
+                // Make an AJAX request to move the product from the wishlist to the cart
+                fetch(`/wishlist/moveToCart/${productId}`, {
+                  method: 'POST',
+                })
+                  .then((response) => response.json())
+                  .then((data) => {
+                    if (data.message === 'Product moved from wishlist to cart successfully') {
+                      // Display a success message
+                      displaySuccessMessage('Product moved to cart successfully');
+                      // Optionally, remove the product from the HTML wishlist
+                      let productElement = document.getElementById('product_' + productId);
+                      if (productElement) {
+                        console.log(productElement)
+                        productElement.style.display = "none";
+                      }
+                    } else {
+                      // Handle any other error or message here
+                      // You can display an error message in a similar way
+                    }
+                  })
+                  .catch((error) => {
+                    console.error(error);
+                    // Handle the error here
+                  });
+              });
+            });
+            
+       
+      });
+</script>
+
+  <%- include('userSidePartials/UserFooter') %>
