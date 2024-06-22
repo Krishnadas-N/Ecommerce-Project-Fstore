@@ -8,7 +8,7 @@ export class DownloadManager implements IDownloadManager {
     /**
      * @returns {boolean} Indicating if the data was opened.
      */
-    openOrDownloadData(element: any, data: any, filename: any): boolean;
+    openOrDownloadData(data: any, filename: any, dest?: null): boolean;
     download(blob: any, url: any, filename: any, _options: any): void;
     #private;
 }

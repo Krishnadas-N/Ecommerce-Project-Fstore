@@ -3,7 +3,6 @@ export type AnnotationStorage = import("../src/display/annotation_storage").Anno
 export type PageViewport = import("../src/display/display_utils").PageViewport;
 export type IPDFLinkService = import("./interfaces").IPDFLinkService;
 export type XfaLayerBuilderOptions = {
-    pageDiv: HTMLDivElement;
     pdfPage: PDFPageProxy;
     annotationStorage?: import("../src/display/annotation_storage").AnnotationStorage | undefined;
     linkService: IPDFLinkService;
@@ -11,7 +10,6 @@ export type XfaLayerBuilderOptions = {
 };
 /**
  * @typedef {Object} XfaLayerBuilderOptions
- * @property {HTMLDivElement} pageDiv
  * @property {PDFPageProxy} pdfPage
  * @property {AnnotationStorage} [annotationStorage]
  * @property {IPDFLinkService} linkService
@@ -21,8 +19,7 @@ export class XfaLayerBuilder {
     /**
      * @param {XfaLayerBuilderOptions} options
      */
-    constructor({ pageDiv, pdfPage, annotationStorage, linkService, xfaHtml, }: XfaLayerBuilderOptions);
-    pageDiv: HTMLDivElement;
+    constructor({ pdfPage, annotationStorage, linkService, xfaHtml, }: XfaLayerBuilderOptions);
     pdfPage: import("../src/display/api").PDFPageProxy;
     annotationStorage: import("../src/display/annotation_storage").AnnotationStorage;
     linkService: import("./interfaces").IPDFLinkService;

@@ -201,7 +201,7 @@ export namespace PresentationModeState {
 }
 export class ProgressBar {
     constructor(bar: any);
-    set percent(arg: number);
+    set percent(val: number);
     get percent(): number;
     setWidth(viewer: any): void;
     setDisableAutoFetch(delay?: number): void;
