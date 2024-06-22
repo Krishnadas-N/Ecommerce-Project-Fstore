@@ -39,7 +39,7 @@
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "paypal-rest-sdk": "^1.8.1",
-    "pdfjs-dist": "^4.3.136",
+    "pdfjs-dist": "^3.4.120",
     "pdfkit": "^0.13.0",
     "puppeteer": "^21.5.0",
     "razorpay": "^2.0.2",
