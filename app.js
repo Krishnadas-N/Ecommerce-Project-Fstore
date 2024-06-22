@@ -8,9 +8,7 @@ require('dotenv').config();
 const bodyParser = require('body-parser');
 const cors = require("cors");
 const session = require('express-session')
-const RedisStore = require('connect-redis').default;  // Updated to use .default
-const Redis = require('ioredis');
-const redisClient = new Redis();
+const MemoryStore = require('memorystore')(session)
 const flash = require('connect-flash');
 const app = express();
 const passport = require("passport");
@@ -25,10 +23,14 @@ app.set('views', [path.join(__dirname, 'views'), path.join(__dirname, 'views/use
 app.set('view engine', 'ejs');
 
 app.use(session({
-  store: new RedisStore({ client: redisClient }),
+  cookie: { maxAge: 86400000 },
+  store: new MemoryStore({
+    checkPeriod: 86400000 // prune expired entries every 24h
+  }),
   secret: 'your-secret-key',
   resave: false,
   saveUninitialized: true,
+
 }));
 
 app.use(
