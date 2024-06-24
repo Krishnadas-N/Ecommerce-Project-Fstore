@@ -119,7 +119,6 @@ const productCategories = async (req, res,next) => {
 const productManagementCreate =  async (req, res,next) => {
         try {
             console.log("kkksdskdjskjkdsdsskds")
-            let admin = await Admin.findOne({email:"nkrishnadas008@gmail.com"})
             // Extract product details from the request body
             const existingProduct = await Product.findOne({name: { $regex: new RegExp("^" + req.body.name + "$", "i") }});
             if(existingProduct){
@@ -142,7 +141,6 @@ const productManagementCreate =  async (req, res,next) => {
           
 
             const product = new Product({
-                owner: admin._id, // Adjust this based on how you handle user authentication
                 name: req.body.name,
                 description: req.body.description,
                 image: req.files['image'][0].path.replace(/\\/g, '/').replace('public/', ''), // Assuming 'image' is the name attribute of the main image input

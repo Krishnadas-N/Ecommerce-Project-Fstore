@@ -1,14 +1,7 @@
 const mongoose = require('mongoose');
 
-const objectID = mongoose.Schema.Types.ObjectId;
 
 const productSchema = new mongoose.Schema({
-    owner : {
-       type: objectID,
-       required: true,
-       ref: 'Admin'
-    },
-
     name: {
        type: String,
        required: true,
