@@ -340,7 +340,7 @@ table tr td{
                                                     </div>
                                                     <div class="modal-body">
                                                         <!-- Edit category form -->
-                                                        <form method="POST" id="categoryEditForm" action="category-management/edit-category/<%= category._id %>">
+                                                        <form method="POST" id="categoryEditForm" action="category-management/edit-category/<%= category._id %>"  enctype="multipart/form-data">
                                                             <div class="form-group mb-3">
                                                                 <label for="editName">Name:</label><br>
                                                                 <input type="text" class="form-control" id="editName" name="editName" value="<%= category.name %>" required>
