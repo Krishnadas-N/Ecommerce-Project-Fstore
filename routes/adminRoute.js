@@ -24,7 +24,7 @@ const { adminHome,
     generateYearlyReport,
     generateWeeklyReport,
     generateDailyReport
-                     }  = require('../controllers/AdminController');
+                     }  = require('../controllers/adminController');
 
 const {categoryManagementGet,
     categoryManagementCreate,
@@ -57,10 +57,10 @@ const{
     bannersDelete,
     bannersUpdate
 
-    }=require('../controllers/BannerController')
+    }=require('../controllers/bannerController')
 
 
-const Order = require('../controllers/AdminOrderManagement')
+const Order = require('../controllers/adminOrderManagement')
 
 function isAuthenticated(req,res,next){
     if(req.session.isAdmin){

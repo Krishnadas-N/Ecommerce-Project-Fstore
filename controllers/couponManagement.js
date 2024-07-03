@@ -1,6 +1,6 @@
 const Admin = require('../models/adminModel');
 const User = require('../models/userModel');
-const Category = require('../models/CategoryModel');
+const Category = require('../models/categoryModel');
 const { Coupon,
   updateCouponStatus,} = require('../models/couponModel')
   const cron = require('node-cron');

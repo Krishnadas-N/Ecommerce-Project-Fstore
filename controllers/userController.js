@@ -1,21 +1,21 @@
 const User = require('../models/userModel');
 const Product  = require('../models/productModel');
-const Category = require('../models/CategoryModel');
-const Banner = require('../models/BannerModel')
+const Category = require('../models/categoryModel');
+const Banner = require('../models/bannerModel')
 const utils = require('../utils/PassPortUtils');
 const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs');
 const AddressModel = require('../models/addressModel');
-const OrderModel = require('../models/OrderModel')
+const OrderModel = require('../models/orderModel')
 const fs = require('fs');
 const path = require('path');
 const puppeteer = require('puppeteer');
 let UserLoggedin = null;
 const ejs = require('ejs')
-const Rating =  require('../models/RatingModel')
-const ReviewModel = require('../models/ReviewSchema')
+const Rating =  require('../models/ratingModel')
+const ReviewModel = require('../models/reviewSchema')
 const uuidv4 = require('uuid').v4;
-const Referral = require('../models/ReferralModel')
+const Referral = require('../models/referralModel')
 const Wishlist =require('../models/wishlistModel')
 const easyinvoice = require('easyinvoice')
 

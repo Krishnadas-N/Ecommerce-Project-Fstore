@@ -1,5 +1,5 @@
 const Admin = require('../models/adminModel');
-const Category = require('../models/CategoryModel');
+const Category = require('../models/categoryModel');
 const Subcategory = require('../models/subCategoryModel');
 const Products = require('../models/productModel')
 
@@ -108,12 +108,14 @@ const categoryManagementEdit = async(req,res)=>{
           req.session.categoryErr="Category is Not Found in Database"
             return res.redirect('/admin/category-management')
         }
+     
         // Update name and description
         category.name = editName;
         category.description = editDescription;
-        
+        console.log(editName, editDescription,req.file+'////////////////',req.files)
         // Update image if a new one is uploaded
         if (req.file) {
+
             // Replace backslashes with forward slashes and remove 'public/' from the path
             const newImage = req.file.path.replace(/\\/g, '/').replace('public/', '');
             category.image = newImage;

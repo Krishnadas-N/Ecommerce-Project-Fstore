@@ -5,10 +5,10 @@ const uuidv4 = require('uuid').v4;
 const otpModel = require('../models/otpModel')
 
 const User = require('../models/userModel');
-const Category = require('../models/CategoryModel');
+const Category = require('../models/categoryModel');
 const crypto = require('crypto')
-const Referral = require('../models/ReferralModel');
-const Wallet =  require('../models/WalletModel')
+const Referral = require('../models/referralModel');
+const Wallet =  require('../models/walletModel')
 
 
 const generateOTP = () => {

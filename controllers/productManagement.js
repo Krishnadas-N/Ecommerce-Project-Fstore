@@ -1,12 +1,12 @@
 const Admin = require('../models/adminModel');
 const Product = require('../models/productModel');
 const mongoose =require('mongoose')
-const Category = require('../models/CategoryModel')
+const Category = require('../models/categoryModel')
 const Subcategory = require('../models/subCategoryModel')
 const Wishlist = require('../models/wishlistModel')
-const Rating = require('../models/RatingModel');
-const Review = require('../models/ReviewSchema')
-const Order = require('../models/OrderModel')
+const Rating = require('../models/ratingModel');
+const Review = require('../models/reviewSchema')
+const Order = require('../models/orderModel')
 
 
 const productManagementGet = async (req, res,next) => {

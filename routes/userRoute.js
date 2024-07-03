@@ -53,7 +53,7 @@ const {
      ProductDetailedView,
 } = require('../controllers/productManagement')
 
-const WalletController = require('../controllers/WalletController')
+const WalletController = require('../controllers/walletController')
 const cartController = require('../controllers/cartController')
 
 

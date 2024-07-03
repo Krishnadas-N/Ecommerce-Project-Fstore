@@ -1,15 +1,15 @@
 const User = require('../models/userModel');
 const Product  = require('../models/productModel');
-const Category = require('../models/CategoryModel');
+const Category = require('../models/categoryModel');
 const Cart = require('../models/cartModel');
 const AddressModel = require('../models/addressModel') 
-const OrderModel = require('../models/OrderModel');
+const OrderModel = require('../models/orderModel');
 const mongoose = require('mongoose')
 const razorpayInstance = require('../config/RazorPay');
 const crypto = require('crypto')
 const Wishlist = require('../models/wishlistModel')
 require('dotenv').config();
-const Wallet  = require('../models/WalletModel')
+const Wallet  = require('../models/walletModel')
 const { Coupon } = require('../models/couponModel')
 
 
