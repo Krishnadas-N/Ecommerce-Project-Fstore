@@ -39,7 +39,7 @@ F_STORE is an eCommerce website designed for selling gents shirts. This project 
 ### Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/F_STORE.git
+   git clone https://github.com/Krishnadas-N/Ecommerce-Project-Fstore.git
    cd F_STORE
    ```
 
