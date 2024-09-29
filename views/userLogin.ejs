@@ -64,11 +64,11 @@
                                             <% } %>
                                         <form action="/login" method="post" onsubmit="return validateForm()">
                                             <div class="form-group">
-                                                <input type="email" required="" name="email" placeholder="Your Email">
+                                                <input type="email" required="" value="testuser@mail.com" name="email" placeholder="Your Email">
                                                 <span class="text-danger"  id="emailMessage"></span>
                                             </div>
                                             <div class="form-group">
-                                                <input required="" type="password" name="password" placeholder="Password">
+                                                <input required="" type="password" value="Testuser@123" name="password" placeholder="Password">
                                                 <span class="text-danger"  id="passwordMessage"></span>
                                             </div>
                                             <div class="d-flex justify-content-end"><a href="/forgot-password">Forgot Password? </a></div>
@@ -87,6 +87,11 @@
                                            
                                         </form>
                                         <div class="text-muted text-center">Don't have an account? <a href="register">Sign up now</a></div>
+
+                                        <div class="text-muted text-center mt-2">
+                                            Do you want to visit admin side <a href="/admin/login">Admin Login</a>
+                                          </div>
+                                          
                                     </div>
                                 </div>
                             </div>
