@@ -65,7 +65,9 @@ require('./config/passport')(passport);
 app.use('/admin', adminRouter);
 app.use('/', usersRouter);
 app.use('/cart',cartRouter)
-
+app.get('/keep-alive', (_req: Request, res: Response) => {
+    res.status(200).send('Server is alive!');
+})
 
 
 app.use(errorHandler);
