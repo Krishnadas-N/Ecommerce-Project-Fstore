@@ -12,7 +12,8 @@ const MemoryStore = require('memorystore')(session)
 const flash = require('connect-flash');
 const app = express();
 const passport = require("passport");
-const http  = require('http')
+const http  = require('http');
+const https = require('https');
 const server = http.createServer(app);
 // const LocalStrategy = require("passport-local").Strategy;
 const errorHandler = require('./middlewares/errorHandler');
@@ -73,8 +74,26 @@ app.get('/keep-alive', (req, res) => {
 app.use(errorHandler);
 
 
+function keepAlive() {
+    const options = {
+        hostname: 'f-store-ecommerce.onrender.com',
+        path: '/keep-alive',
+        method: 'GET',
+    };
 
+    const req = https.request(options, (res) => {
+        console.log(`Keep-alive status: ${res.statusCode}`);
+        res.on('data', (d) => process.stdout.write(d));
+    });
 
+    req.on('error', (error) => {
+        console.error(`Error calling keep-alive: ${error.message}`);
+    });
+
+    req.end();
+}
+
+setInterval(keepAlive, 1500000); 
 
 app.use('*',(req,res,next)=>{
   res.render('errorHandler')
